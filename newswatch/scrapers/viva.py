@@ -75,7 +75,7 @@ class VivaScraper(BaseScraper):
                 "content": content,
                 "keyword": keyword,
                 "category": None,
-                "source": "viva.co.id",
+                "source": self.base_url.split("www.")[1],
                 "link": link,
             }
             self.results.append(item)

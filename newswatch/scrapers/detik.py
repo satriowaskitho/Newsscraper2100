@@ -40,6 +40,7 @@ class DetikScraper(BaseScraper):
             for a in articles
             if a.get("href")
             and self.href_pattern.match(a.get("href"))
+            and "wolipop.detik.com" not in a.get("href")
             and "/detiktv/" not in a.get("href")
             and "/pop/" not in a.get("href")
         }
@@ -80,7 +81,7 @@ class DetikScraper(BaseScraper):
                 "content": content,
                 "keyword": keyword,
                 "category": category,
-                "source": "detik.co.id",
+                "source": self.base_url.split("www.")[1],
                 "link": link,
             }
             self.results.append(item)

@@ -36,7 +36,8 @@ class KontanScraper(BaseScraper):
             for a in articles
             if a.get("href")
             and self.href_pattern.match(a.get("href"))
-            and "insight.kontan.co.id" not in a.get("href") # FIX ME: dev pattern for insight.kontan.co.id
+            and "insight.kontan.co.id"  # FIX ME: dev pattern for insight.kontan.co.id
+            not in a.get("href")
         }
         return filtered_hrefs
 
@@ -94,7 +95,7 @@ class KontanScraper(BaseScraper):
                 "content": content,
                 "keyword": keyword,
                 "category": None,
-                "source": "kontan.co.id",
+                "source": self.base_url.split("www.")[1],
                 "link": link,
             }
             self.results.append(item)

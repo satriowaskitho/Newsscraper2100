@@ -80,7 +80,7 @@ class CNBCScraper(BaseScraper):
                 "content": content,
                 "keyword": keyword,
                 "category": category,
-                "source": "cnbcindonesia.com",
+                "source": self.base_url.split("www.")[1],
                 "link": link,
             }
             self.results.append(item)
