@@ -32,7 +32,7 @@ class KontanScraper(BaseScraper):
             return None
 
         filtered_hrefs = {
-            f"http:{a.get("href")}"
+            f"http:{a.get('href')}"
             for a in articles
             if a.get("href")
             and self.href_pattern.match(a.get("href"))
@@ -44,9 +44,14 @@ class KontanScraper(BaseScraper):
     async def get_article(self, link, keyword):
         response_text = await self.fetch(link)
         if not response_text:
+            logging.warning(f"No response for {link}")
             return
         soup = BeautifulSoup(response_text, "html.parser")
         try:
+            # FIX ME: change to select_one
+            category = soup.find("div", {"class": "breadcumb fs18"}).get_text(
+                strip=True
+            )
             title = soup.find("h1", {"class": "detail-desk"}).get_text(strip=True)
             publish_date_str = soup.find(
                 "div", {"class": "fs14 ff-opensans font-gray"}
@@ -94,7 +99,7 @@ class KontanScraper(BaseScraper):
                 "author": author,
                 "content": content,
                 "keyword": keyword,
-                "category": None,
+                "category": category,
                 "source": self.base_url.split("www.")[1],
                 "link": link,
             }

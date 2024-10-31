@@ -40,9 +40,14 @@ class VivaScraper(BaseScraper):
     async def get_article(self, link, keyword):
         response_text = await self.fetch(f"{link}?page=all")
         if not response_text:
+            logging.warning(f"No response for {link}")
             return
         soup = BeautifulSoup(response_text, "html.parser")
         try:
+            # FIX ME: change to select_one
+            category = soup.find(
+                "a", {"class": "breadcrumb-step content_center"}
+            ).get_text(strip=True)
             title = soup.find("h1", {"class": "main-content-title"}).get_text(
                 strip=True
             )
@@ -74,7 +79,7 @@ class VivaScraper(BaseScraper):
                 "author": author,
                 "content": content,
                 "keyword": keyword,
-                "category": None,
+                "category": category,
                 "source": self.base_url.split("www.")[1],
                 "link": link,
             }

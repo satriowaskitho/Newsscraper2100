@@ -36,6 +36,7 @@ class CNBCScraper(BaseScraper):
     async def get_article(self, link, keyword):
         response_text = await self.fetch(link)
         if not response_text:
+            logging.warning(f"No response for {link}")
             return
         soup = BeautifulSoup(response_text, "html.parser")
         try:

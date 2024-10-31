@@ -34,7 +34,7 @@ class BisnisIndonesiaScraper(BaseScraper):
             return None
 
         filtered_hrefs = {
-            f"https://{self.base_url}/article/{a["slug"]}"
+            f"https://{self.base_url}/article/{a['slug']}"
             for a in articles
             if a["slug"]
         }
@@ -44,6 +44,7 @@ class BisnisIndonesiaScraper(BaseScraper):
         pass
         response_text = await self.fetch(link)
         if not response_text:
+            logging.warning(f"No response for {link}")
             return
         soup = BeautifulSoup(response_text, "html.parser")
 
@@ -56,7 +57,7 @@ class BisnisIndonesiaScraper(BaseScraper):
             publish_date_str = content_data["published_at"]
             author = content_data["author_name"]
             category = (
-                f"{content_data["category_name"]} - {content_data["sub_category_name"]}"
+                f"{content_data['category_name']} - {content_data['sub_category_name']}"
             )
             content = BeautifulSoup(content_data["content"], "html.parser").get_text(
                 separator=" ", strip=True

@@ -49,6 +49,7 @@ class DetikScraper(BaseScraper):
     async def get_article(self, link, keyword):
         response_text = await self.fetch(f"{link}?single=1")
         if not response_text:
+            logging.warning(f"No response for {link}")
             return
         soup = BeautifulSoup(response_text, "html.parser")
         try:
