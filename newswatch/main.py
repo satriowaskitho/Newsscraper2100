@@ -9,11 +9,11 @@ import logging
 from datetime import datetime
 from pathlib import Path
 
-from scrapers.bisnisindonesia import BisnisIndonesiaScraper
-from scrapers.cnbc import CNBCScraper
-from scrapers.detik import DetikScraper
-from scrapers.kontan import KontanScraper
-from scrapers.viva import VivaScraper
+from .scrapers.bisnisindonesia import BisnisIndonesiaScraper
+from .scrapers.cnbc import CNBCScraper
+from .scrapers.detik import DetikScraper
+from .scrapers.kontan import KontanScraper
+from .scrapers.viva import VivaScraper
 
 logging.basicConfig(
     level=logging.INFO,

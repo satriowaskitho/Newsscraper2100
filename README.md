@@ -16,8 +16,17 @@ pip install news-watch
 To run the scraper from the command line:
 
 ```bash
-newswatch -k <your keyword> -sd <define start date>
+newswatch -k <keywords> -sd <start_date> [-v]
 ```
+Command-Line Arguments
+
+`--keywords`, `-k`: Required. A comma-separated list of keywords to scrape (e.g., -k "ojk,bank,npl").
+
+`--start_date`, `-sd`: Required. The start date for scraping in YYYY-MM-DD format (e.g., -sd 2023-01-01).
+
+`--verbose`, `-v`: Optional. Increase verbosity level (e.g., `-v`, `-vv`, `-vvv`).
+
+
 
 ### Examples
 
@@ -27,10 +36,10 @@ Scrape articles related to "ihsg" from October 28, 2024:
 newswatch -k ihsg -sd 2024-10-28
 ```
 
-Increase verbosity to see more logs:
+Scrape articles for multiple keywords and increase verbosity:
 
 ```bash
-idnewswatch -k ihsg -sd 2024-10-28 -vv
+idnewswatch -k "ihsg,bank,finance" -sd 2024-10-28 -vv
 ```
 
 ## Output

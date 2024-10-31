@@ -3,11 +3,11 @@ import asyncio
 import logging
 from datetime import datetime
 
-from main import main as run_main
+from .main import main as run_main
 
 
 def cli():
-    parser = argparse.ArgumentParser(description="News Watch Scraper")
+    parser = argparse.ArgumentParser(description="News Watch")
     parser.add_argument(
         "--keywords",
         "-k",
