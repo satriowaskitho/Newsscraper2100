@@ -12,14 +12,15 @@ class CNBCScraper(BaseScraper):
         self.base_url = "https://www.cnbcindonesia.com"
         self.start_date = start_date
 
-    def build_search_url(self, keyword, page):
+    async def build_search_url(self, keyword, page):
         # https://www.cnbcindonesia.com/search?query=&fromdate=&page=
         query_params = {
             "query": keyword,
             "fromdate": self.start_date.strftime("%Y/%m/%d"),
             "page": page,
         }
-        return f"{self.base_url}/search?{urlencode(query_params)}"
+        url = f"{self.base_url}/search?{urlencode(query_params)}"
+        return await self.fetch(url)
 
     def parse_article_links(self, response_text):
         soup = BeautifulSoup(response_text, "html.parser")

@@ -18,7 +18,7 @@ class BaseScraper(AsyncScraper, ABC):
         return dateparser.parse(date_string).replace(tzinfo=None)
 
     @abstractmethod
-    def build_search_url(self, keyword, page):
+    async def build_search_url(self, keyword, page):
         pass
 
     @abstractmethod
@@ -32,8 +32,7 @@ class BaseScraper(AsyncScraper, ABC):
     async def fetch_search_results(self, keyword):
         page = 1
         while self.continue_scraping:
-            url = self.build_search_url(keyword, page)
-            response_text = await self.fetch(url)
+            response_text = await self.build_search_url(keyword, page)
             if not response_text:
                 break
 

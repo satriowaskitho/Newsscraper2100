@@ -13,7 +13,7 @@ class BisnisIndonesiaScraper(BaseScraper):
         self.base_url = "bisnisindonesia.id"
         self.start_date = start_date
 
-    def build_search_url(self, keyword, page):
+    async def build_search_url(self, keyword, page):
         # https://api.bisnisindonesia.id/search/v1/article?page=1&pageSize=20&keyword=ekonomi&order_by=DESC
         query_params = {
             "page": page,
@@ -21,9 +21,8 @@ class BisnisIndonesiaScraper(BaseScraper):
             "keyword": keyword,
             "order_by": "DESC",
         }
-        return (
-            f"https://api.{self.base_url}/search/v1/article?{urlencode(query_params)}"
-        )
+        url = f"https://api.{self.base_url}/search/v1/article?{urlencode(query_params)}"
+        return await self.fetch(url)
 
     def parse_article_links(self, response_text):
         response_json = json.loads(response_text)

@@ -17,7 +17,7 @@ class KompasScraper(BaseScraper):
         self.start_date = start_date
         self.continue_scraping = True
 
-    def build_search_url(self, keyword, page):
+    async def build_search_url(self, keyword, page):
         cx = "partner-pub-9012468469771973:uc7pie-r3ad"
         response_text = requests.get(f"https://cse.google.com/cse.js?cx={cx}").text
 
@@ -51,7 +51,8 @@ class KompasScraper(BaseScraper):
             "callback": f"google.search.cse.api{random_string}",
             "rurl": f"https://search.kompas.com/search/?q={keyword}&submit=Submit#gsc.tab=0&gsc.q={keyword}&gsc.sort=date",
         }
-        return "https://cse.google.com/cse/element/v1?" + urlencode(params)
+        url = "https://cse.google.com/cse/element/v1?" + urlencode(params)
+        return await self.fetch(url)
 
     def parse_article_links(self, response_text):
         pattern = r"google\.search\.cse\.[^\(]+\((.*?)\);"

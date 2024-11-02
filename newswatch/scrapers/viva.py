@@ -15,10 +15,13 @@ class VivaScraper(BaseScraper):
         self.continue_scraping = True
         self.href_pattern = re.compile(r"https://www\.viva\.co\.id/.*/\d+-")
 
-    def build_search_url(self, keyword, page):
-        # https://www.viva.co.id/search?q=
-        query_params = {"q": keyword}
-        return f"{self.base_url}/search?{urlencode(query_params)}"
+    async def build_search_url(self, keyword, page):
+        # https://www.viva.co.id/request/load-more-search
+        # keyword=&ctype=art&page=3&record_count=12
+
+        url = f"{self.base_url}/request/load-more-search"
+        data_res = f"keyword={keyword}&ctype=art&page={page}&record_count=12"
+        return await self.fetch(url, method="POST", data=data_res)
 
     def parse_article_links(self, response_text):
         soup = BeautifulSoup(response_text, "html.parser")

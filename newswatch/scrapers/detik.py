@@ -16,7 +16,7 @@ class DetikScraper(BaseScraper):
         self.continue_scraping = True
         self.href_pattern = re.compile(r".*\.detik\.com/.*/d-\d+")
 
-    def build_search_url(self, keyword, page):
+    async def build_search_url(self, keyword, page):
         # https://www.detik.com/search/searchall?query=&page=&result_type=latest&fromdatex=&todatex=
         query_params = {
             "query": keyword,
@@ -26,7 +26,8 @@ class DetikScraper(BaseScraper):
             "todatex": date.today().strftime("%d/%m/%Y"),
         }
 
-        return f"{self.base_url}/search/searchnews?{urlencode(query_params)}"
+        url = f"{self.base_url}/search/searchnews?{urlencode(query_params)}"
+        return await self.fetch(url)
 
     def parse_article_links(self, response_text):
         soup = BeautifulSoup(response_text, "html.parser")

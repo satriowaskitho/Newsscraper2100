@@ -15,13 +15,14 @@ class KontanScraper(BaseScraper):
         self.continue_scraping = True
         self.href_pattern = re.compile(r".*\.kontan\.co\.id/news/.*")
 
-    def build_search_url(self, keyword, page):
+    async def build_search_url(self, keyword, page):
         # https://www.kontan.co.id/search/?search=&per_page=20
         query_params = {
             "search": keyword,
             "per_page": (page - 1) * 20,
         }
-        return f"{self.base_url}/search?{urlencode(query_params)}"
+        url = f"{self.base_url}/search?{urlencode(query_params)}"
+        return await self.fetch(url)
 
     def parse_article_links(self, response_text):
         soup = BeautifulSoup(response_text, "html.parser")
