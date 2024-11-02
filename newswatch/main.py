@@ -12,6 +12,7 @@ from pathlib import Path
 from .scrapers.bisnisindonesia import BisnisIndonesiaScraper
 from .scrapers.cnbc import CNBCScraper
 from .scrapers.detik import DetikScraper
+from .scrapers.kompas import KompasScraper
 from .scrapers.kontan import KontanScraper
 from .scrapers.viva import VivaScraper
 
@@ -66,7 +67,9 @@ async def main(args):
         BisnisIndonesiaScraper(keywords, start_date=start_date),
         CNBCScraper(keywords, start_date=start_date),
         DetikScraper(keywords, start_date=start_date),
-        KontanScraper(keywords, start_date=start_date),
+        # Disable KontanScraper since it has been banned by Cloudflare
+        # KontanScraper(keywords, start_date=start_date),
+        KompasScraper(keywords, start_date=start_date),
         VivaScraper(keywords, start_date=start_date),
         # FIX ME: add more scrapers here
         # FUTURE: english website reuters, CNBC

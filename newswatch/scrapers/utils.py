@@ -1,5 +1,3 @@
-# utils.py
-
 import asyncio
 import logging
 

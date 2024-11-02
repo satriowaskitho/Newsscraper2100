@@ -1,0 +1,12 @@
+{
+    "configurations": [
+        {
+            "name": "newswatch.cli: python debugger",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "newswatch.cli",
+            "console": "integratedTerminal",
+            "args": ["--start_date", "2024-10-31"]
+        }
+    ]
+}
