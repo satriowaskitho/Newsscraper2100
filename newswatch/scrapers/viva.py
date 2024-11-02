@@ -1,11 +1,7 @@
-# viva.py
-
-import json
 import logging
 import re
 from urllib.parse import urlencode
 
-import dateparser
 from bs4 import BeautifulSoup
 
 from .basescraper import BaseScraper

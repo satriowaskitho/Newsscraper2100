@@ -1,6 +1,6 @@
 # news-watch
 
-idnewswatch is a Python package that allows you to scrape news articles from various Indonesian news websites based on specific keywords and date ranges.
+news-watch is a Python package that allows you to scrape news articles from various Indonesian news websites based on specific keywords and date ranges.
 
 
 ## Installation

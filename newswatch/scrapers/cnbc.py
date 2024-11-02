@@ -1,10 +1,7 @@
-import json
 import logging
-import re
-from datetime import date
 from urllib.parse import urlencode
 
-from bs4 import BeautifulSoup, Comment
+from bs4 import BeautifulSoup
 
 from .basescraper import BaseScraper
 
