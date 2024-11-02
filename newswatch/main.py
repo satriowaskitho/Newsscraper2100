@@ -64,12 +64,12 @@ async def main(args):
     keywords = args.keywords
 
     scrapers = [
-        KompasScraper(keywords, start_date=start_date),
         BisnisIndonesiaScraper(keywords, start_date=start_date),
         CNBCScraper(keywords, start_date=start_date),
         DetikScraper(keywords, start_date=start_date),
         # Disable KontanScraper since it has been banned by Cloudflare
         # KontanScraper(keywords, start_date=start_date),
+        KompasScraper(keywords, start_date=start_date),
         VivaScraper(keywords, start_date=start_date),
         # FIX ME: add more scrapers here
         # FUTURE: english website reuters, CNBC
