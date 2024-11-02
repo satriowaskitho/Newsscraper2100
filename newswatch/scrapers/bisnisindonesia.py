@@ -8,8 +8,8 @@ from .basescraper import BaseScraper
 
 
 class BisnisIndonesiaScraper(BaseScraper):
-    def __init__(self, keywords, concurrency=12, start_date=None):
-        super().__init__(keywords, concurrency)
+    def __init__(self, keywords, concurrency=12, start_date=None, queue_=None):
+        super().__init__(keywords, concurrency, queue_)
         self.base_url = "bisnisindonesia.id"
         self.start_date = start_date
 
@@ -79,6 +79,6 @@ class BisnisIndonesiaScraper(BaseScraper):
                 "source": self.base_url,
                 "link": link,
             }
-            self.results.append(item)
+            await self.queue_.put(item)
         except Exception as e:
             logging.error(f"Error parsing article {link}: {e}")

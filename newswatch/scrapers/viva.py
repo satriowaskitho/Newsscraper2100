@@ -8,8 +8,8 @@ from .basescraper import BaseScraper
 
 
 class VivaScraper(BaseScraper):
-    def __init__(self, keywords, concurrency=12, start_date=None):
-        super().__init__(keywords, concurrency)
+    def __init__(self, keywords, concurrency=12, start_date=None, queue_=None):
+        super().__init__(keywords, concurrency, queue_)
         self.base_url = "https://www.viva.co.id"
         self.start_date = start_date
         self.continue_scraping = True
@@ -79,6 +79,6 @@ class VivaScraper(BaseScraper):
                 "source": self.base_url.split("www.")[1],
                 "link": link,
             }
-            self.results.append(item)
+            await self.queue_.put(item)
         except Exception as e:
             logging.error(f"Error parsing article {link}: {e}")
