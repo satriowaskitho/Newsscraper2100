@@ -20,8 +20,8 @@ class VivaScraper(BaseScraper):
         # keyword=&ctype=art&page=3&record_count=12
 
         url = f"{self.base_url}/request/load-more-search"
-        data_res = f"keyword={keyword}&ctype=art&page={page}&record_count=12"
-        return await self.fetch(url, method="POST", data=data_res)
+        payload = {"keyword": keyword, "ctype": "art", "page": page, "record_count": 12}
+        return await self.fetch(url, method="POST", data=payload)
 
     def parse_article_links(self, response_text):
         soup = BeautifulSoup(response_text, "html.parser")

@@ -21,13 +21,18 @@ def cli():
         help="Start date for scraping in YYYY-MM-DD format",
     )
     parser.add_argument(
+        "--scrapers",
+        "-s",
+        default="all",
+        help="Comma-separated list of scrapers to use (e.g., 'kompas,viva'). Default is all.",
+    )
+    parser.add_argument(
         "--verbose",
         "-v",
         action="count",
         default=0,
         help="Increase verbosity level (e.g., -v, -vv, -vvv)",
     )
-    # FIX ME: add argument for select scraper
     # FIX ME: add argument for output name
 
     args = parser.parse_args()

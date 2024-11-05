@@ -68,21 +68,51 @@ async def write_csv(queue, filename=None):
 async def main(args):
     start_date = datetime.strptime(args.start_date, "%Y-%m-%d")
     keywords = args.keywords
+    selected_scrapers = args.scrapers
 
     queue_ = asyncio.Queue()
     writer_task = asyncio.create_task(write_csv(queue_))
 
-    scrapers = [
-        BisnisIndonesiaScraper(keywords, start_date=start_date, queue_=queue_),
-        CNBCScraper(keywords, start_date=start_date, queue_=queue_),
-        DetikScraper(keywords, start_date=start_date, queue_=queue_),
-        # Disable KontanScraper since it has been banned by Cloudflare
-        # KontanScraper(keywords, start_date=start_date, queue_=   queue_),
-        KompasScraper(keywords, start_date=start_date, queue_=queue_),
-        VivaScraper(keywords, start_date=start_date, queue_=queue_),
+    # mapping of scraper names to their corresponding classes and additional parameters
+    scraper_classes = {
+        "bisnisindonesia": {"class": BisnisIndonesiaScraper, "params": {}},
+        "cnbc": {"class": CNBCScraper, "params": {}},
+        "detik": {"class": DetikScraper, "params": {}},
+        "kompas": {"class": KompasScraper, "params": {}},
+        "viva": {"class": VivaScraper, "params": {}},
+        #
+        # # Currently results in an error when run on the cloud due to Cloudflare ban
+        # # Limitation: can scrape a maximum of 50 pages
+        "kontan": {"class": KontanScraper, "params": {}},
+        #
         # FIX ME: add more scrapers here
-        # FUTURE: english website reuters, CNBC
-    ]
+        # FIX ME: add english website reuters, CNBC
+    }
+
+    if selected_scrapers.lower() == "all":
+        scrapers_to_run = list(scraper_classes.keys())
+    else:
+        scrapers_to_run = [
+            name.strip().lower() for name in selected_scrapers.split(",")
+        ]
+
+    scrapers = []
+    for scraper_name in scrapers_to_run:
+        scraper_info = scraper_classes.get(scraper_name)
+        if scraper_info:
+            scraper_class = scraper_info["class"]
+            scraper_params = scraper_info["params"]
+            # instantiate scraper with possible special parameters
+            scraper_instance = scraper_class(
+                keywords, start_date=start_date, queue_=queue_, **scraper_params
+            )
+            scrapers.append(scraper_instance)
+        else:
+            logging.warning(f"scraper '{scraper_name}' is not recognized.")
+
+    if not scrapers:
+        logging.error("no valid scrapers selected. exiting.")
+        return
 
     # run all scrapers concurrently
     await asyncio.gather(*(scraper.scrape() for scraper in scrapers))

@@ -36,7 +36,7 @@ class AsyncScraper:
             except aiohttp.ClientError as e:
                 if retries < self.max_retries:
                     logging.warning(f"Retry {retries+1}/{self.max_retries} for {url}")
-                    await asyncio.sleep(2**retries)
+                    await asyncio.sleep(1 * retries)
                     return await self.fetch(url, method, data, headers, retries + 1)
                 else:
                     logging.error(f"Error fetching {url}: {e}")

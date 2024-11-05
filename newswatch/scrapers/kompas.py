@@ -18,56 +18,15 @@ class KompasScraper(BaseScraper):
         self.continue_scraping = True
 
     async def build_search_url(self, keyword, page):
-        cx = "partner-pub-9012468469771973:uc7pie-r3ad"
-        response_text = requests.get(f"https://cse.google.com/cse.js?cx={cx}").text
-
-        cse_tok_pattern = re.compile(r'"cse_token":\s+"([^\"]+)"', re.DOTALL)
-        cselibv_pattern = re.compile(r'"cselibVersion":\s+"([^\"]+)"', re.DOTALL)
-
-        cse_tok = cse_tok_pattern.search(response_text).group(1)
-        cselibv = cselibv_pattern.search(response_text).group(1)
-
-        random_string = f"{random.randint(1000, 9999)}"
-        # https://cse.google.com/cse/element/v1?rsz=filtered_cse&num=10&hl=en&source=gcsc&start=10&cselibv=8fa85d58e016b414&cx=partner-pub-9012468469771973%3Auc7pie-r3ad&q=ihsg&safe=active&cse_tok=AB-tC_4ESv3DqiuMy-n2BHbEuIRb%3A1730534606417&lr=&cr=&gl=&filter=0&sort=date&as_oq=&as_sitesearch=&exp=cc&callback=google.search.cse.api15570&rurl=https%3A%2F%2Fsearch.kompas.com%2Fsearch%2F%3Fq%3Dihsg%26submit%3DSubmit%23gsc.tab%3D0%26gsc.q%3Dihsg%26gsc.sort%3Ddate
-        params = {
-            "rsz": "filtered_cse",
-            "num": 10,
-            "hl": "en",
-            "source": "gcsc",
-            "start": page - 1 * 10,
-            "cselibv": cselibv,
-            "cx": cx,
-            "q": keyword,
-            "safe": "active",
-            "cse_tok": cse_tok,
-            "lr": "",
-            "cr": "",
-            "gl": "",
-            "filter": 0,
-            "sort": "date",
-            "as_oq": "",
-            "as_sitesearch": "",
-            "exp": "cc",
-            "callback": f"google.search.cse.api{random_string}",
-            "rurl": f"https://search.kompas.com/search/?q={keyword}&submit=Submit#gsc.tab=0&gsc.q={keyword}&gsc.sort=date",
-        }
-        url = "https://cse.google.com/cse/element/v1?" + urlencode(params)
-        return await self.fetch(url)
+        return await self.fetch(f"https://www.kompas.com/tag/{keyword}?page={page}")
 
     def parse_article_links(self, response_text):
-        pattern = r"google\.search\.cse\.[^\(]+\((.*?)\);"
-        response_json = json.loads(
-            re.search(pattern, response_text, re.DOTALL).group(1)
-        )
-        articles = response_json["results"]
+        soup = BeautifulSoup(response_text, "html.parser")
+        articles = soup.select(".article__link[href]")
         if not articles:
             return None
 
-        filtered_hrefs = {
-            a["unescapedUrl"]
-            for a in articles
-            if a["unescapedUrl"] and "kompas.com/tag/" not in a["unescapedUrl"]
-        }
+        filtered_hrefs = {a.get("href") for a in articles if a.get("href")}
         return filtered_hrefs
 
     async def get_article(self, link, keyword):
@@ -111,7 +70,7 @@ class KompasScraper(BaseScraper):
 
             content = content_div.get_text(separator=" ", strip=True)
 
-            publish_date = self.parse_date(publish_date_str)
+            publish_date = self.parse_date(publish_date_str, locales=["id"])
             if not publish_date:
                 logging.error(f"Error parsing date for article {link}")
                 return

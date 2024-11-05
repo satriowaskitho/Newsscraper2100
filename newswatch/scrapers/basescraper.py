@@ -14,8 +14,8 @@ class BaseScraper(AsyncScraper, ABC):
         self.queue_ = queue_
         self.continue_scraping = True
 
-    def parse_date(self, date_string):
-        return dateparser.parse(date_string).replace(tzinfo=None)
+    def parse_date(self, date_string, **kwargs):
+        return dateparser.parse(date_string, **kwargs).replace(tzinfo=None)
 
     @abstractmethod
     async def build_search_url(self, keyword, page):
