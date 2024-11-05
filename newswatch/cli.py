@@ -17,7 +17,7 @@ def cli():
     parser.add_argument(
         "--start_date",
         "-sd",
-        default=datetime.now().replace(day=1).strftime("%Y-%m-%d"),
+        default=datetime.now().strftime("%Y-%m-%d"),
         help="Start date for scraping in YYYY-MM-DD format",
     )
     parser.add_argument(

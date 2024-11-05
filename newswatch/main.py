@@ -88,6 +88,7 @@ async def main(args):
         # FIX ME: add more scrapers here
         # FIX ME: add english website reuters, CNBC
     }
+    # FIX ME: add if platform linux then exclude kontan
 
     if selected_scrapers.lower() == "all":
         scrapers_to_run = list(scraper_classes.keys())
