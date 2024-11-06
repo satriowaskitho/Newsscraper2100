@@ -39,7 +39,7 @@ async def write_csv(queue, keywords, filename=None):
     ]
 
     current_time = datetime.now().strftime("%Y%m%d_%H")
-    filename = Path.cwd() / f"news-watch-{keywords.replace(",",".")}-{current_time}.csv"
+    filename = Path.cwd() / f"news-watch-{keywords.replace(',','.')}-{current_time}.csv"
 
     try:
         with open(filename, mode="w", newline="", encoding="utf-8") as csvfile:

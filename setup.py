@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="news-watch",
-    version="0.1.4",
+    version="0.1.5",
     author="Okky Mabruri",
     author_email="okkymbrur@gmail.com",
     description="A scraper for Indonesian news websites.",
