@@ -1,13 +1,32 @@
 import argparse
 import asyncio
 import logging
+import platform
 from datetime import datetime
 
 from .main import main as run_main
 
 
 def cli():
-    parser = argparse.ArgumentParser(description="News Watch")
+    # List of available scrapers based on the platform
+    is_linux = platform.system().lower() == "linux"
+    available_scrapers = ["bisnisindonesia", "cnbc", "detik", "kompas", "viva"]
+    if not is_linux:
+        available_scrapers.append("kontan")
+    available_scrapers_str = ",".join(available_scrapers)
+
+    # main description with platform-specific notes
+    description = (
+        "News Watch - Scrape news articles from various Indonesian news websites.\n"
+        f"Currently supports: {available_scrapers_str}.\n"
+    )
+    if is_linux:
+        description += "Note: The 'kontan' scraper is not available on Linux platforms due to known issues."
+
+    parser = argparse.ArgumentParser(
+        description=description,
+        formatter_class=argparse.RawTextHelpFormatter,
+    )
     parser.add_argument(
         "--keywords",
         "-k",

@@ -6,6 +6,7 @@ maintainer: Okky Mabruri <okkymbrur@gmail.com>
 import asyncio
 import csv
 import logging
+import platform
 from datetime import datetime
 from pathlib import Path
 
@@ -25,7 +26,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-async def write_csv(queue, filename=None):
+async def write_csv(queue, keywords, filename=None):
     fieldnames = [
         "title",
         "publish_date",
@@ -38,7 +39,7 @@ async def write_csv(queue, filename=None):
     ]
 
     current_time = datetime.now().strftime("%Y%m%d_%H")
-    filename = Path.cwd() / f"news-watch-{current_time}.csv"
+    filename = Path.cwd() / f"news-watch-{keywords.replace(",",".")}-{current_time}.csv"
 
     try:
         with open(filename, mode="w", newline="", encoding="utf-8") as csvfile:
@@ -71,7 +72,7 @@ async def main(args):
     selected_scrapers = args.scrapers
 
     queue_ = asyncio.Queue()
-    writer_task = asyncio.create_task(write_csv(queue_))
+    writer_task = asyncio.create_task(write_csv(queue_, keywords))
 
     # mapping of scraper names to their corresponding classes and additional parameters
     scraper_classes = {
@@ -80,15 +81,15 @@ async def main(args):
         "detik": {"class": DetikScraper, "params": {}},
         "kompas": {"class": KompasScraper, "params": {}},
         "viva": {"class": VivaScraper, "params": {}},
-        #
-        # # Currently results in an error when run on the cloud due to Cloudflare ban
-        # # Limitation: can scrape a maximum of 50 pages
-        "kontan": {"class": KontanScraper, "params": {}},
-        #
         # FIX ME: add more scrapers here
         # FIX ME: add english website reuters, CNBC
     }
-    # FIX ME: add if platform linux then exclude kontan
+
+    # Exclude 'kontan' scraper if running on a Linux platform
+    # Currently results in an error when run on the cloud due to Cloudflare ban
+    # Limitation: can scrape a maximum of 50 pages
+    if platform.system().lower() != "linux":
+        scraper_classes["kontan"] = {"class": KontanScraper, "params": {}}
 
     if selected_scrapers.lower() == "all":
         scrapers_to_run = list(scraper_classes.keys())
