@@ -9,14 +9,14 @@ from .basescraper import BaseScraper
 
 
 class DetikScraper(BaseScraper):
-    def __init__(self, keywords, concurrency=12, start_date=None):
-        super().__init__(keywords, concurrency)
+    def __init__(self, keywords, concurrency=12, start_date=None, queue_=None):
+        super().__init__(keywords, concurrency, queue_)
         self.base_url = "https://www.detik.com"
         self.start_date = start_date
         self.continue_scraping = True
         self.href_pattern = re.compile(r".*\.detik\.com/.*/d-\d+")
 
-    def build_search_url(self, keyword, page):
+    async def build_search_url(self, keyword, page):
         # https://www.detik.com/search/searchall?query=&page=&result_type=latest&fromdatex=&todatex=
         query_params = {
             "query": keyword,
@@ -26,7 +26,8 @@ class DetikScraper(BaseScraper):
             "todatex": date.today().strftime("%d/%m/%Y"),
         }
 
-        return f"{self.base_url}/search/searchnews?{urlencode(query_params)}"
+        url = f"{self.base_url}/search/searchnews?{urlencode(query_params)}"
+        return await self.fetch(url)
 
     def parse_article_links(self, response_text):
         soup = BeautifulSoup(response_text, "html.parser")
@@ -84,6 +85,6 @@ class DetikScraper(BaseScraper):
                 "source": self.base_url.split("www.")[1],
                 "link": link,
             }
-            self.results.append(item)
+            await self.queue_.put(item)
         except Exception as e:
             logging.error(f"Error parsing article {link}: {e}")

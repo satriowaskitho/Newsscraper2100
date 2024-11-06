@@ -7,19 +7,20 @@ from .basescraper import BaseScraper
 
 
 class CNBCScraper(BaseScraper):
-    def __init__(self, keywords, concurrency=12, start_date=None):
-        super().__init__(keywords, concurrency)
+    def __init__(self, keywords, concurrency=12, start_date=None, queue_=None):
+        super().__init__(keywords, concurrency, queue_)
         self.base_url = "https://www.cnbcindonesia.com"
         self.start_date = start_date
 
-    def build_search_url(self, keyword, page):
+    async def build_search_url(self, keyword, page):
         # https://www.cnbcindonesia.com/search?query=&fromdate=&page=
         query_params = {
             "query": keyword,
             "fromdate": self.start_date.strftime("%Y/%m/%d"),
             "page": page,
         }
-        return f"{self.base_url}/search?{urlencode(query_params)}"
+        url = f"{self.base_url}/search?{urlencode(query_params)}"
+        return await self.fetch(url)
 
     def parse_article_links(self, response_text):
         soup = BeautifulSoup(response_text, "html.parser")
@@ -81,6 +82,6 @@ class CNBCScraper(BaseScraper):
                 "source": self.base_url.split("www.")[1],
                 "link": link,
             }
-            self.results.append(item)
+            await self.queue_.put(item)
         except Exception as e:
             logging.error(f"Error parsing article {link}: {e}")

@@ -8,17 +8,17 @@ from .utils import AsyncScraper
 
 
 class BaseScraper(AsyncScraper, ABC):
-    def __init__(self, keywords, concurrency=12):
+    def __init__(self, keywords, concurrency=12, queue_=None):
         super().__init__(concurrency)
         self.keywords = [keyword.strip() for keyword in keywords.split(",")]
-        self.results = []
+        self.queue_ = queue_
         self.continue_scraping = True
 
-    def parse_date(self, date_string):
-        return dateparser.parse(date_string).replace(tzinfo=None)
+    def parse_date(self, date_string, **kwargs):
+        return dateparser.parse(date_string, **kwargs).replace(tzinfo=None)
 
     @abstractmethod
-    def build_search_url(self, keyword, page):
+    async def build_search_url(self, keyword, page):
         pass
 
     @abstractmethod
@@ -32,8 +32,7 @@ class BaseScraper(AsyncScraper, ABC):
     async def fetch_search_results(self, keyword):
         page = 1
         while self.continue_scraping:
-            url = self.build_search_url(keyword, page)
-            response_text = await self.fetch(url)
+            response_text = await self.build_search_url(keyword, page)
             if not response_text:
                 break
 

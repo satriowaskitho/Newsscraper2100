@@ -8,20 +8,21 @@ from .basescraper import BaseScraper
 
 
 class KontanScraper(BaseScraper):
-    def __init__(self, keywords, concurrency=12, start_date=None):
-        super().__init__(keywords, concurrency)
+    def __init__(self, keywords, concurrency=12, start_date=None, queue_=None):
+        super().__init__(keywords, concurrency, queue_)
         self.base_url = "https://www.kontan.co.id"
         self.start_date = start_date
         self.continue_scraping = True
         self.href_pattern = re.compile(r".*\.kontan\.co\.id/news/.*")
 
-    def build_search_url(self, keyword, page):
+    async def build_search_url(self, keyword, page):
         # https://www.kontan.co.id/search/?search=&per_page=20
         query_params = {
             "search": keyword,
             "per_page": (page - 1) * 20,
         }
-        return f"{self.base_url}/search?{urlencode(query_params)}"
+        url = f"{self.base_url}/search?{urlencode(query_params)}"
+        return await self.fetch(url)
 
     def parse_article_links(self, response_text):
         soup = BeautifulSoup(response_text, "html.parser")
@@ -101,6 +102,6 @@ class KontanScraper(BaseScraper):
                 "source": self.base_url.split("www.")[1],
                 "link": link,
             }
-            self.results.append(item)
+            await self.queue_.put(item)
         except Exception as e:
             logging.error(f"Error parsing article {link}: {e}")
