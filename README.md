@@ -1,6 +1,9 @@
 # news-watch
 
-news-watch is a Python package that allows you to scrape news articles from various Indonesian news websites based on specific keywords and date ranges.
+[![PyPI version](https://badge.fury.io/py/news-watch.svg)](https://badge.fury.io/py/news-watch)
+[![Build Status](https://github.com/okkymabruri/news-watch/actions/workflows/test.yml/badge.svg)](https://github.com/okkymabruri/news-watch/actions)
+
+news-watch allows you to scrape news articles from various Indonesian news websites based on specific keywords and date ranges.
 
 
 ## Installation
@@ -46,7 +49,7 @@ newswatch -k "ihsg,bank,keuangan" -sd 2024-10-28 -vv
 
 ## Output
 
-The scraped articles are saved as a CSV file in the current working directory with the format `news-watch-YYYYMMDD_HH.csv`.
+The scraped articles are saved as a CSV file in the current working directory with the format `news-watch-{keywords}-YYYYMMDD_HH.csv`.
 
 The CSV file contains the following fields:
 
