@@ -6,7 +6,7 @@
             "request": "launch",
             "module": "newswatch.cli",
             "console": "integratedTerminal",
-            "args": ["-k", "ihsg,saham", "-sd", "2024-10-30"]
+            "args": ["-k", "ihsg,saham"]
         }
     ]
 }

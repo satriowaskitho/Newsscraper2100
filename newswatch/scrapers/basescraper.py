@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 
 import dateparser
 
-from .utils import AsyncScraper
+from ..utils import AsyncScraper
 
 
 class BaseScraper(AsyncScraper, ABC):
