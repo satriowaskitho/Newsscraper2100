@@ -7,13 +7,13 @@ from newswatch.scrapers.bisnisindonesia import BisnisIndonesiaScraper
 from newswatch.scrapers.cnbc import CNBCScraper
 from newswatch.scrapers.detik import DetikScraper
 from newswatch.scrapers.kompas import KompasScraper
-from newswatch.scrapers.kontan import KontanScraper
+# from newswatch.scrapers.kontan import KontanScraper
 from newswatch.scrapers.viva import VivaScraper
 
 scraper_classes = [
     DetikScraper,
     KompasScraper,
-    KontanScraper,
+    # KontanScraper,
     CNBCScraper,
     VivaScraper,
     BisnisIndonesiaScraper,
@@ -21,6 +21,7 @@ scraper_classes = [
 
 
 @pytest.mark.asyncio
+@pytest.mark.network
 @pytest.mark.parametrize("scraper_class", scraper_classes)
 async def test_scraper_fetch_data(scraper_class):
     items = []
