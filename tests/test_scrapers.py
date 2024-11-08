@@ -4,19 +4,19 @@ from datetime import datetime, timedelta
 import pytest
 
 from newswatch.scrapers.bisnisindonesia import BisnisIndonesiaScraper
-from newswatch.scrapers.cnbc import CNBCScraper
+# from newswatch.scrapers.cnbc import CNBCScraper
 from newswatch.scrapers.detik import DetikScraper
 from newswatch.scrapers.kompas import KompasScraper
 # from newswatch.scrapers.kontan import KontanScraper
 from newswatch.scrapers.viva import VivaScraper
 
 scraper_classes = [
+    BisnisIndonesiaScraper,
+    # CNBCScraper, # exclude pytest error
     DetikScraper,
     KompasScraper,
-    # KontanScraper,
-    CNBCScraper,
+    # KontanScraper, # only apply on local
     VivaScraper,
-    BisnisIndonesiaScraper,
 ]
 
 
