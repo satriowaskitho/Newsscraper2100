@@ -11,7 +11,7 @@ from datetime import datetime
 from pathlib import Path
 
 from .scrapers.bisnisindonesia import BisnisIndonesiaScraper
-from .scrapers.cnbc import CNBCScraper
+from .scrapers.cnbcindonesia import CNBCScraper
 from .scrapers.detik import DetikScraper
 from .scrapers.kompas import KompasScraper
 from .scrapers.kontan import KontanScraper
