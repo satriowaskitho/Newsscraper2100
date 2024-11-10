@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import pytest
 
 from newswatch.scrapers.bisnisindonesia import BisnisIndonesiaScraper
-# from newswatch.scrapers.cnbc import CNBCScraper
+# from newswatch.scrapers.cnbcindonesia import CNBCScraper
 from newswatch.scrapers.detik import DetikScraper
 from newswatch.scrapers.kompas import KompasScraper
 # from newswatch.scrapers.kontan import KontanScraper

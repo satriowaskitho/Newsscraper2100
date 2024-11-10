@@ -10,7 +10,7 @@ from .main import main as run_main
 def cli():
     # List of available scrapers based on the platform
     is_linux = platform.system().lower() == "linux"
-    available_scrapers = ["bisnisindonesia", "cnbc", "detik", "kompas", "viva"]
+    available_scrapers = ["bisnisindonesia", "cnbcindonesia", "detik", "kompas", "viva"]
     if not is_linux:
         available_scrapers.append("kontan")
     available_scrapers_str = ",".join(available_scrapers)

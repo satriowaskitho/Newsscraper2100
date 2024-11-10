@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="news-watch",
-    version="0.1.5",
+    version="0.1.6",
     author="Okky Mabruri",
     author_email="okkymbrur@gmail.com",
     description="A scraper for Indonesian news websites.",
@@ -17,6 +17,7 @@ setup(
         "aiohttp>=3.10.10",
         "beautifulsoup4>=4.12.3",
         "dateparser>=1.2.0",
+        "requests>=2.32.3",
     ],
     entry_points={
         "console_scripts": [

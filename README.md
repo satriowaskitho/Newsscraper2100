@@ -38,13 +38,13 @@ Command-Line Arguments
 Scrape articles related to "ihsg" from October 28, 2024:
 
 ```bash
-newswatch -k ihsg -sd 2024-10-28
+newswatch -k ihsg -sd 2024-11-01
 ```
 
 Scrape articles for multiple keywords and increase verbosity:
 
 ```bash
-newswatch -k "ihsg,bank,keuangan" -sd 2024-10-28 -vv
+newswatch -k "ihsg,bank,keuangan" -sd 2024-11-01 -vv
 ```
 
 ## Output
@@ -64,17 +64,15 @@ The CSV file contains the following fields:
 
 ## Supported Websites
 
-- Bisnis Indonesia
-- CNBC Indonesia
-- Detik
-- Kompas
-- Kontan
-
+- [Bisnis Indonesia](https://bisnisindonesia.id/)
+- [CNBC Indonesia](https://www.cnbcindonesia.com/)
+- [Detik.com](https://www.detik.com/)
+- [Kompas.com](https://www.kompas.com/)
+- [Kontan.co.id](https://www.kontan.co.id/)
     > Note: Running this on the cloud currently leads to errors due to Cloudflare restrictions.
     >
     > Limitation: The scraper can process a maximum of 50 pages.
-
-- Viva
+- [Viva.co.id](https://www.viva.co.id/)
 
 ## Contributing
 
