@@ -2,7 +2,7 @@ name: Publish Package
 
 on:
   release:
-    types: [created]
+    types: [created, published]
 
 jobs:
   build-and-publish:
@@ -26,7 +26,7 @@ jobs:
           python -m build
 
       - name: Publish to PyPI
-        if: github.event.release.prerelease == false
+        # if: github.event.release.prerelease == false
         env:
           TWINE_USERNAME: '__token__'
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
