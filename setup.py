@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="news-watch",
-    version="0.1.6",
+    version="0.1.7",
     author="Okky Mabruri",
     author_email="okkymbrur@gmail.com",
     description="A scraper for Indonesian news websites.",
@@ -14,10 +14,12 @@ setup(
     url="https://github.com/okkymabruri/news-watch",
     packages=find_packages(),
     install_requires=[
-        "aiohttp>=3.10.10",
-        "beautifulsoup4>=4.12.3",
-        "dateparser>=1.2.0",
-        "requests>=2.32.3",
+        "aiohttp==3.11.12",
+        "beautifulsoup4==4.13.3",
+        "dateparser==1.2.1",
+        "openpyxl==3.1.5",
+        "pandas==2.2.3",
+        "requests==2.32.3",
     ],
     entry_points={
         "console_scripts": [
