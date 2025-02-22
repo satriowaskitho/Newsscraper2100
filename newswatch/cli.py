@@ -12,11 +12,14 @@ def cli():
     is_linux = platform.system().lower() == "linux"
     available_scrapers = [
         "bisnisindonesia",
+        "bloombergtechnoz",
         "cnbcindonesia",
         "detik",
         "katadata",
         "kompas",
+        "metronews",
         "viva",
+        "tempo",
     ]
     if not is_linux:
         available_scrapers.append("kontan")
@@ -66,7 +69,16 @@ def cli():
         action="store_true",
         help="Suppress all logging output.",
     )
+    parser.add_argument(
+        "--list_scrapers",
+        action="store_true",
+        help="List supported scrapers.",
+    )
     args = parser.parse_args()
+
+    if args.list_scrapers:
+        print("Supported scrapers:\n- " + available_scrapers_str.replace(",", "\n- "))
+        return
 
     if args.silent:
         logging.disable(logging.CRITICAL)
