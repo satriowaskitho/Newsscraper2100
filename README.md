@@ -117,12 +117,12 @@ If you use this software, please use the following BibTex entry:
 ```
 @software{mabruri_newswatch,
   author       = {Okky Mabruri},
-  title        = {{news-watch: Indonesia's top news websites scraper}},
+  title        = {news-watch},
+  version      = {0.2.0},
   year         = {2025},
-  url          = {https://github.com/okkymabruri/news-watch},
-  license      = {MIT},
-  abstract     = {news-watch is a Python package that scrapes structured news data from Indonesia's top news websites, offering keyword and date filtering queries for targeted research.},
-  keywords     = {scraping, news, newswatch, newsscraper, berita, scraping-berita}
+  publisher    = {Zenodo},
+  doi          = {10.5281/zenodo.14908390},
+  url          = {https://doi.org/10.5281/zenodo.14908390}
 }
 ```
 
