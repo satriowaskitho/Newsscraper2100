@@ -14,6 +14,7 @@ from .scrapers.bisnisindonesia import BisnisIndonesiaScraper
 from .scrapers.bloombergtechnoz import BloombergTechnozScraper
 from .scrapers.cnbcindonesia import CNBCScraper
 from .scrapers.detik import DetikScraper
+from .scrapers.jawapos import JawaposScraper
 from .scrapers.katadata import KatadataScraper
 from .scrapers.kompas import KompasScraper
 from .scrapers.kontan import KontanScraper
@@ -102,7 +103,7 @@ async def write_xlsx(queue, keywords, filename=None):
         try:
             item = await queue.get()
         except RuntimeError as e:
-            if 'Event loop is closed' in str(e):
+            if "Event loop is closed" in str(e):
                 break
             else:
                 raise
@@ -154,6 +155,7 @@ async def main(args):
     # Limitation: can scrape a maximum of 50 pages
     if platform.system().lower() != "linux":
         scraper_classes["kontan"] = {"class": KontanScraper, "params": {}}
+        scraper_classes["jawapos"] = {"class": JawaposScraper, "params": {}}
 
     if selected_scrapers.lower() == "all":
         scrapers_to_run = list(scraper_classes.keys())
