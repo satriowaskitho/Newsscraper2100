@@ -129,7 +129,7 @@ This project is licensed under the MIT - see the [LICENSE](LICENSE) file for det
 
 If you use this software, please cite it using the following:
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14912258.svg)](https://doi.org/10.5281/zenodo.14912258)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15355660.svg)](https://doi.org/10.5281/zenodo.15355660)
 
 ```bibtex
 @software{mabruri_newswatch,
@@ -143,7 +143,7 @@ If you use this software, please cite it using the following:
 }
 ```
 
-Available on Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14908390.svg)](https://doi.org/10.5281/zenodo.14908390)
+Available on Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15355660.svg)](https://doi.org/10.5281/zenodo.15355660)
 
 ### Related Work
 * [indonesia-news-scraper](https://github.com/theyudhiztira/indonesia-news-scraper)
