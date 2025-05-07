@@ -15,12 +15,18 @@ You can install newswatch via pip:
 pip install news-watch
 ```
 
+To install the development version from the GitHub 'dev' branch:
+
+```bash
+pip install git+https://github.com/okkymabruri/news-watch.git@dev
+```
+
 ## Usage
 
 To run the scraper from the command line:
 
 ```bash
-newswatch -k <keywords> -sd <start_date> -s [<scrapers>] -of <output_format> --silent
+newswatch -k <keywords> -sd <start_date> -s [<scrapers>] -of <output_format> -v
 ```
 Command-Line Arguments
 
@@ -32,7 +38,7 @@ Command-Line Arguments
 
 `--output_format`, `-of`: Optional. Specify the output format (currently support csv, xlsx).
 
-`--silent`, `-S`: Optional. Run the scraper without printing output to the console.
+`--verbose`, `-v`: Optional. Show all logging output (silent by default).
 
 `--list_scrapers`: Optional. List supported scrapers.
 
@@ -45,10 +51,10 @@ Scrape articles related to "ihsg" from January 1st, 2025:
 newswatch --keywords ihsg --start_date 2025-01-01
 ```
 
-Scrape articles for multiple keywords (ihsg, bank, keuangan) and disable logging:
+Scrape articles for multiple keywords (ihsg, bank, keuangan) with verbose logging:
 
 ```bash
-newswatch -k "ihsg,bank,keuangan" -sd 2025-01-01 --silent
+newswatch -k "ihsg,bank,keuangan" -sd 2025-01-01 -v
 ```
 
 List supported scrapers:
@@ -57,10 +63,10 @@ List supported scrapers:
 newswatch --list_scrapers
 ```
 
-Scrape articles for specific news website (bisnisindonesia and detik) with excel output format and disable logging:
+Scrape articles for specific news website (bisnisindonesia and detik) with excel output format:
 
 ```bash
-newswatch -k "ihsg" -s "bisnisindonesia,detik" --output_format xlsx -S
+newswatch -k "ihsg" -s "bisnisindonesia,detik" --output_format xlsx
 ```
 
 ## Run on Google Colab
@@ -84,7 +90,8 @@ The output file contains the following columns:
 
 ## Supported Websites
 
-- [Bisnis Indonesia](https://bisnisindonesia.id/)
+- [Bisnis Indonesia](https://bisnisindonesia.id/) **(temporarily disabled)**
+- [Bisnis.com](https://www.bisnis.com/)
 - [Bloomberg Technoz](https://www.bloombergtechnoz.com/)
 - [CNBC Indonesia](https://www.cnbcindonesia.com/)
 - [Detik.com](https://www.detik.com/)
@@ -98,6 +105,7 @@ The output file contains the following columns:
 
 
 > Note: 
+> - **BisnisIndonesia scraper is currently disabled due to parsing errors. It will be re-enabled in a future update.**
 > - Running [Kontan.co.id](https://www.kontan.co.id/) and [Jawapos](https://www.jawapos.com/) on the cloud currently leads to errors due to Cloudflare restrictions.
 > - Limitation: [Kontan.co.id](https://www.kontan.co.id/) scraper can process a maximum of 50 pages.
 
@@ -119,17 +127,19 @@ This project is licensed under the MIT - see the [LICENSE](LICENSE) file for det
 
 ## Citation
 
-If you use this software, please use the following BibTex entry:
+If you use this software, please cite it using the following:
 
-```
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14912258.svg)](https://doi.org/10.5281/zenodo.14912258)
+
+```bibtex
 @software{mabruri_newswatch,
   author       = {Okky Mabruri},
   title        = {news-watch},
-  version      = {0.2.0},
+  version      = {0.2.2},
   year         = {2025},
   publisher    = {Zenodo},
-  doi          = {10.5281/zenodo.14908390},
-  url          = {https://doi.org/10.5281/zenodo.14908390}
+  doi          = {10.5281/zenodo.14912258},
+  url          = {https://doi.org/10.5281/zenodo.14912258}
 }
 ```
 

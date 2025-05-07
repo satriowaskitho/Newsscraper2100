@@ -10,7 +10,8 @@ import platform
 from datetime import datetime
 from pathlib import Path
 
-from .scrapers.bisnisindonesia import BisnisIndonesiaScraper
+# from .scrapers.bisnisindonesia import BisnisIndonesiaScraper
+from .scrapers.bisnis import BisnisScraper
 from .scrapers.bloombergtechnoz import BloombergTechnozScraper
 from .scrapers.cnbcindonesia import CNBCScraper
 from .scrapers.detik import DetikScraper
@@ -101,12 +102,18 @@ async def write_xlsx(queue, keywords, filename=None):
 
     while True:
         try:
-            item = await queue.get()
+            # Add a timeout to avoid hanging indefinitely
+            item = await asyncio.wait_for(queue.get(), timeout=30)
+        except asyncio.TimeoutError:
+            # If no items received for 30 seconds, break the loop
+            logging.warning("No items received for 30 seconds, stopping writer")
+            break
         except RuntimeError as e:
             if "Event loop is closed" in str(e):
                 break
             else:
                 raise
+            
         if item is None:  # Sentinel value to stop
             break
         # Format datetime objects as strings
@@ -137,9 +144,10 @@ async def main(args):
 
     # mapping of scraper names to their corresponding classes and additional parameters
     scraper_classes = {
-        "bisnisindonesia": {"class": BisnisIndonesiaScraper, "params": {}},
+        # FIX ME: fix bisnisindonesia scraper
+        # "bisnisindonesia": {"class": BisnisIndonesiaScraper, "params": {}},
         "bloombergtechnoz": {"class": BloombergTechnozScraper, "params": {}},
-        "cnbc": {"class": CNBCScraper, "params": {}},
+        "cnbcindonesia": {"class": CNBCScraper, "params": {}},
         "detik": {"class": DetikScraper, "params": {}},
         "katadata": {"class": KatadataScraper, "params": {}},
         "kompas": {"class": KompasScraper, "params": {}},
@@ -154,6 +162,7 @@ async def main(args):
     # Currently results in an error when run on the cloud due to Cloudflare ban
     # Limitation: can scrape a maximum of 50 pages
     if platform.system().lower() != "linux":
+        scraper_classes["bisnis"] = {"class": BisnisScraper, "params": {}} # switch to bisnis.com from bisnisindonesia
         scraper_classes["kontan"] = {"class": KontanScraper, "params": {}}
         scraper_classes["jawapos"] = {"class": JawaposScraper, "params": {}}
 
@@ -180,11 +189,38 @@ async def main(args):
 
     if not scrapers:
         logging.error("no valid scrapers selected. exiting.")
+        # Make sure to cancel writer task
+        writer_task.cancel()
+        try:
+            await writer_task
+        except asyncio.CancelledError:
+            pass
         return
 
-    # run all scrapers concurrently
-    await asyncio.gather(*(scraper.scrape() for scraper in scrapers))
+    # run all scrapers concurrently with a timeout
+    try:
+        scraper_tasks = [asyncio.create_task(scraper.scrape()) for scraper in scrapers]
+        # Set overall timeout to 3 minutes for all scrapers
+        await asyncio.wait_for(asyncio.gather(*scraper_tasks), timeout=180)
+    except asyncio.TimeoutError:
+        logging.warning("Scraping took too long and was stopped after 3 minutes")
+    except Exception as e:
+        logging.error(f"Error during scraping: {e}")
+    finally:
+        # Cancel any remaining scraper tasks
+        for task in asyncio.all_tasks():
+            if task is not asyncio.current_task() and task is not writer_task:
+                task.cancel()
 
-    # ater scraping is done, put a sentinel value into the queue to signal the writer to finish
+    # After scraping is done, put a sentinel value into the queue to signal the writer to finish
     await queue_.put(None)
-    await writer_task
+    
+    # Wait for the writer to finish with a timeout
+    try:
+        await asyncio.wait_for(writer_task, timeout=30)
+    except asyncio.TimeoutError:
+        logging.warning("Writer task took too long and was stopped")
+        writer_task.cancel()
+    except Exception as e:
+        logging.error(f"Error in writer task: {e}")
+        writer_task.cancel()
