@@ -15,7 +15,7 @@ You can install newswatch via pip:
 pip install news-watch
 ```
 
-To install the development version from the GitHub 'dev' branch:
+To install the development version:
 
 ```bash
 pip install git+https://github.com/okkymabruri/news-watch.git@dev
@@ -63,10 +63,10 @@ List supported scrapers:
 newswatch --list_scrapers
 ```
 
-Scrape articles for specific news website (bisnisindonesia and detik) with excel output format:
+Scrape articles for specific news website (detik) with excel output format:
 
 ```bash
-newswatch -k "ihsg" -s "bisnisindonesia,detik" --output_format xlsx
+newswatch -k "ihsg" -s "detik" --output_format xlsx
 ```
 
 ## Run on Google Colab
@@ -90,8 +90,7 @@ The output file contains the following columns:
 
 ## Supported Websites
 
-- [Bisnis Indonesia](https://bisnisindonesia.id/) **(temporarily disabled)**
-- [Bisnis.com](https://www.bisnis.com/)
+- [Bisnis](https://www.bisnis.com/)
 - [Bloomberg Technoz](https://www.bloombergtechnoz.com/)
 - [CNBC Indonesia](https://www.cnbcindonesia.com/)
 - [Detik.com](https://www.detik.com/)
@@ -105,7 +104,6 @@ The output file contains the following columns:
 
 
 > Note: 
-> - **BisnisIndonesia scraper is currently disabled due to parsing errors. It will be re-enabled in a future update.**
 > - Running [Kontan.co.id](https://www.kontan.co.id/) and [Jawapos](https://www.jawapos.com/) on the cloud currently leads to errors due to Cloudflare restrictions.
 > - Limitation: [Kontan.co.id](https://www.kontan.co.id/) scraper can process a maximum of 50 pages.
 
