@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="news-watch",
-    version="0.2.2",
+    version="0.2.3",
     author="Okky Mabruri",
     author_email="okkymbrur@gmail.com",
     description="news-watch is a Python package that scrapes structured news data from Indonesia's top news websites, offering keyword and date filtering queries for targeted research.",
@@ -20,6 +20,7 @@ setup(
         "openpyxl==3.1.5",
         "pandas==2.2.2",
         "requests==2.32.3",
+        "playwright==1.42.0",
     ],
     entry_points={
         "console_scripts": [

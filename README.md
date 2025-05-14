@@ -8,7 +8,7 @@
 news-watch is a Python package that scrapes structured news data from [Indonesia's top news websites](#supported-websites), offering keyword and date filtering queries for targeted research
 
 
-> ## ⚠️ Ethical Considerations & Disclaimer ⚠️
+> ### ⚠️ Ethical Considerations & Disclaimer ⚠️
 > **Purpose:** This project is intended for educational and research purposes only. It is not designed for commercial use that could be detrimental to the news source providers.
 > 
 > **User Responsibility:**

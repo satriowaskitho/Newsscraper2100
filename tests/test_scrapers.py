@@ -23,7 +23,7 @@ scraper_classes = [
     # CNBCScraper, # exclude pytest error
     DetikScraper,
     # JawaposScraper, # only apply on local
-    # KatadataScraper, # currently disabled due to katadata.co.id search results are not showing the latest articles
+    KatadataScraper,
     KompasScraper,
     # KontanScraper, # only apply on local
     MetrotvnewsScraper,
