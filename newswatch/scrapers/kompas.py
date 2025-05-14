@@ -26,7 +26,11 @@ class KompasScraper(BaseScraper):
         if not articles:
             return None
 
-        filtered_hrefs = {a.get("href") for a in articles if a.get("href")}
+        filtered_hrefs = {
+            a.get("href")
+            for a in articles
+            if a.get("href") and "video.kompas.com" not in a.get("href")
+        }
         return filtered_hrefs
 
     async def get_article(self, link, keyword):
@@ -43,6 +47,8 @@ class KompasScraper(BaseScraper):
             publish_date_str = (
                 soup.select_one(".read__time").get_text(strip=True).split("- ")[1]
             )
+            if "Diperbarui" in publish_date_str:
+                publish_date_str = publish_date_str.split("Diperbarui")[1].strip()
             author = soup.select_one(".credit-title-name").get_text(strip=True)
 
             content_div = soup.select_one(".read__content")

@@ -1,6 +1,6 @@
 import asyncio
-from argparse import Namespace
 import logging
+from argparse import Namespace
 
 import pytest
 

@@ -1,4 +1,3 @@
-from .bisnisindonesia import BisnisIndonesiaScraper
 from .bloombergtechnoz import BloombergTechnozScraper
 from .cnbcindonesia import CNBCScraper
 from .detik import DetikScraper

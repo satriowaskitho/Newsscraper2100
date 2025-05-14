@@ -1,9 +1,9 @@
 import logging
-import re
-from datetime import date
-from urllib.parse import urlencode
+import json
+import asyncio
 
 from bs4 import BeautifulSoup
+from playwright.async_api import async_playwright
 
 from .basescraper import BaseScraper
 
@@ -11,26 +11,98 @@ from .basescraper import BaseScraper
 class KatadataScraper(BaseScraper):
     def __init__(self, keywords, concurrency=12, start_date=None, queue_=None):
         super().__init__(keywords, concurrency, queue_)
-        self.base_url = "https://katadata.co.id"
+        self.base_url = "katadata.co.id"
+        self.api_url = "https://search.katadata.co.id/api/search"
         self.start_date = start_date
         self.continue_scraping = True
+        self.bearer_token = None
+
+    async def get_bearer_token(self):
+        if self.bearer_token:
+            return self.bearer_token
+            
+        async with async_playwright() as p:
+            browser = await p.chromium.launch(headless=True)
+            context = await browser.new_context()
+            page = await context.new_page()
+            
+            # Set up request interception to capture the API call with the Bearer token
+            api_request = asyncio.Future()
+            
+            async def handle_request(request):
+                if self.api_url in request.url:
+                    headers = request.headers
+                    if 'authorization' in headers:
+                        auth_header = headers['authorization']
+                        if auth_header.startswith('Bearer '):
+                            token = auth_header.split('Bearer ')[1]
+                            if not api_request.done():
+                                api_request.set_result(token)
+            
+            # Listen for requests
+            await page.route('**/*', lambda route: route.continue_())
+            page.on('request', handle_request)
+            
+            # Navigate to search page with a test query
+            search_query = f"https://search.{self.base_url}/search?q=&order_by_date=true&from_most_recent=true"
+            await page.goto(search_query)
+            
+            # Wait for the API call to happen and extract token (with 10s timeout)
+            try:
+                self.bearer_token = await asyncio.wait_for(api_request, 10)
+                logging.info("Bearer token successfully extracted")
+            except asyncio.TimeoutError:
+                logging.error("Failed to capture Bearer token from network requests")
+                self.bearer_token = None
+            
+            await browser.close()
+            
+        return self.bearer_token
 
     async def build_search_url(self, keyword, page):
-        # https://katadata.co.id/search/news/ihsg%2520merah/-/-/-/-/-/-/10
-        url = f"{self.base_url}/search/news/{keyword.replace(' ', '%2520')}/-/-/-/-/-/-/{(page-1)*10}"
-        return await self.fetch(url)
+        # Ensure we have a bearer token
+        token = await self.get_bearer_token()
+        if not token:
+            logging.error("Failed to obtain Bearer token, search may fail")
 
-    def parse_article_links(self, response_text):
-        soup = BeautifulSoup(response_text, "html.parser")
-        # articles = soup.select(".article article--berita d-flex  .media__link")
-        articles = soup.select(
-            "article.article.article--berita.d-flex div.content-text > a[href]"
+        payload = {
+            "prompt": keyword,
+            "offset": (page - 1) * 10,
+            "source": "katadata",
+            "kanal_or_topic": "",
+            "order_by_date": "true",
+            "from_most_recent": "true"
+        }
+        
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {token}",
+            "User-Agent": "Mozilla/5.0"
+        }
+        
+        return await self.fetch(
+            self.api_url,
+            method="POST",
+            data=json.dumps(payload),
+            headers=headers,
+            timeout=45
         )
 
+    def parse_article_links(self, response_text):
+        try:
+            response_json = json.loads(response_text)
+        except Exception as e:
+            logging.error(f"Error decoding JSON response: {e}")
+            return None
+            
+        articles = response_json.get("results", [])
         if not articles:
             return None
-
-        filtered_hrefs = {a.get("href") for a in articles if a.get("href")}
+            
+        filtered_hrefs = {
+            article.get("url") for article in articles
+            if article.get("url")
+        }
         return filtered_hrefs
 
     async def get_article(self, link, keyword):
@@ -80,7 +152,7 @@ class KatadataScraper(BaseScraper):
                 "content": content,
                 "keyword": keyword,
                 "category": category,
-                "source": self.base_url.split("://")[1],
+                "source": self.base_url,
                 "link": link,
             }
             await self.queue_.put(item)

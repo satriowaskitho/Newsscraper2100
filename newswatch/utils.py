@@ -11,7 +11,9 @@ class AsyncScraper:
         self.max_retries = max_retries
 
     async def __aenter__(self):
-        timeout = aiohttp.ClientTimeout(total=60, connect=10, sock_connect=10, sock_read=30)
+        timeout = aiohttp.ClientTimeout(
+            total=60, connect=10, sock_connect=10, sock_read=30
+        )
         self.session = aiohttp.ClientSession(timeout=timeout)
         return self
 
@@ -26,7 +28,7 @@ class AsyncScraper:
             try:
                 # Create request-specific timeout
                 request_timeout = aiohttp.ClientTimeout(total=timeout)
-                
+
                 if method == "GET":
                     async with self.session.get(
                         url, headers=headers, timeout=request_timeout
@@ -40,11 +42,18 @@ class AsyncScraper:
                         response.raise_for_status()
                         return await response.text()
             except aiohttp.ClientResponseError as e:
-                status = getattr(e, 'status', None)
-                if status == 429 or status in (500, 502, 503, 504):  # Rate limit or server error
+                status = getattr(e, "status", None)
+                if status == 429 or status in (
+                    500,
+                    502,
+                    503,
+                    504,
+                ):  # Rate limit or server error
                     if retries < self.max_retries:
-                        wait_time = 2 ** retries  # Exponential backoff
-                        logging.warning(f"Received status {status}, retry {retries+1}/{self.max_retries} for {url} in {wait_time}s")
+                        wait_time = 2**retries  # Exponential backoff
+                        logging.warning(
+                            f"Received status {status}, retry {retries+1}/{self.max_retries} for {url} in {wait_time}s"
+                        )
                         await asyncio.sleep(wait_time)
                         return await self.fetch(
                             url, method, data, headers, retries + 1, timeout
@@ -54,7 +63,9 @@ class AsyncScraper:
             except aiohttp.ClientError as e:
                 if retries < self.max_retries:
                     wait_time = 1 * (retries + 1)
-                    logging.warning(f"Retry {retries+1}/{self.max_retries} for {url} in {wait_time}s")
+                    logging.warning(
+                        f"Retry {retries+1}/{self.max_retries} for {url} in {wait_time}s"
+                    )
                     await asyncio.sleep(wait_time)
                     return await self.fetch(
                         url, method, data, headers, retries + 1, timeout
@@ -65,7 +76,9 @@ class AsyncScraper:
             except asyncio.TimeoutError:
                 if retries < self.max_retries:
                     wait_time = 1 * (retries + 1)
-                    logging.warning(f"Timeout retry {retries+1}/{self.max_retries} for {url} in {wait_time}s")
+                    logging.warning(
+                        f"Timeout retry {retries+1}/{self.max_retries} for {url} in {wait_time}s"
+                    )
                     await asyncio.sleep(wait_time)
                     return await self.fetch(
                         url, method, data, headers, retries + 1, timeout + 5

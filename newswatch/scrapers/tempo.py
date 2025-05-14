@@ -88,7 +88,7 @@ class TempoScraper(BaseScraper):
                 "content": content,
                 "keyword": keyword,
                 "category": category,
-                "source": self.base_url,
+                "source": self.base_url.split("www.")[1],
                 "link": link,
             }
             await self.queue_.put(item)

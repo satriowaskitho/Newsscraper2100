@@ -1,5 +1,5 @@
 import logging
-from urllib.parse import urlencode, unquote
+from urllib.parse import unquote, urlencode
 
 from bs4 import BeautifulSoup
 
@@ -32,9 +32,7 @@ class BisnisScraper(BaseScraper):
             return None
 
         filtered_hrefs = {
-            unquote(a["href"].split("link?url=")[1])
-            for a in articles
-            if a["href"]
+            unquote(a["href"].split("link?url=")[1]) for a in articles if a["href"]
         }
         return filtered_hrefs
 
@@ -48,22 +46,23 @@ class BisnisScraper(BaseScraper):
 
         try:
             breadcrumb = soup.select_one(".breadcrumb")
-            breadcrumb_items = breadcrumb.select(".breadcrumbItem") if breadcrumb else []
-            
+            breadcrumb_items = (
+                breadcrumb.select(".breadcrumbItem") if breadcrumb else []
+            )
+
             category_parts = []
             for item in breadcrumb_items:
                 if "Home" not in item.get_text(strip=True):
                     link_text = item.select_one(".breadcrumbLink")
                     if link_text:
                         category_parts.append(link_text.get_text(strip=True))
-            
+
             category = " - ".join(category_parts) if category_parts else ""
-            
+
             title = soup.select_one("h1.detailsTitleCaption").get_text()
 
-            publish_date_str = (
-                soup.select_one(".detailsAttributeDates")
-                .get_text(strip=True)
+            publish_date_str = soup.select_one(".detailsAttributeDates").get_text(
+                strip=True
             )
             author = soup.select_one(".authorName").get_text(strip=True).split("-")[0]
 

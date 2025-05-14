@@ -23,7 +23,7 @@ scraper_classes = [
     # CNBCScraper, # exclude pytest error
     DetikScraper,
     # JawaposScraper, # only apply on local
-    # KatadataScraper, # currently disabled due to katadata.co.id search results are not showing the latest articles
+    KatadataScraper,
     KompasScraper,
     # KontanScraper, # only apply on local
     MetrotvnewsScraper,
@@ -55,7 +55,7 @@ async def test_scraper_fetch_data(scraper_class):
     )
 
     consumer_task = asyncio.create_task(item_consumer(queue))
-    
+
     try:
         # Add timeout to prevent hanging
         scrape_task = asyncio.create_task(scraper.scrape())
@@ -68,7 +68,7 @@ async def test_scraper_fetch_data(scraper_class):
         except Exception as e:
             pytest.xfail(f"{scraper_class.__name__} failed as expected: {e}")
             return
-            
+
         # Wait for queue to be processed with timeout
         try:
             await asyncio.wait_for(queue.join(), timeout=5)
