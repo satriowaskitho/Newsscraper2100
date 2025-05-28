@@ -10,7 +10,6 @@ import platform
 from datetime import datetime
 from pathlib import Path
 
-# from .scrapers.bisnisindonesia import BisnisIndonesiaScraper
 from .scrapers.bisnis import BisnisScraper
 from .scrapers.bloombergtechnoz import BloombergTechnozScraper
 from .scrapers.cnbcindonesia import CNBCScraper
@@ -19,7 +18,9 @@ from .scrapers.jawapos import JawaposScraper
 from .scrapers.katadata import KatadataScraper
 from .scrapers.kompas import KompasScraper
 from .scrapers.kontan import KontanScraper
+from .scrapers.mediaindonesia import MediaIndonesiaScraper
 from .scrapers.metrotvnews import MetrotvnewsScraper
+from .scrapers.okezone import OkezoneScraper
 from .scrapers.tempo import TempoScraper
 from .scrapers.viva import VivaScraper
 
@@ -129,6 +130,40 @@ async def write_xlsx(queue, keywords, filename=None):
         logging.error(f"Error writing to XLSX: {e}")
 
 
+def get_available_scrapers():
+    """Get list of available scrapers based on platform"""
+    # mapping of scraper names to their corresponding classes and additional parameters
+    scraper_classes = {
+        # FIX ME: fix bisnisindonesia scraper
+        "bloombergtechnoz": {"class": BloombergTechnozScraper, "params": {}},
+        "cnbcindonesia": {"class": CNBCScraper, "params": {}},
+        "detik": {"class": DetikScraper, "params": {}},
+        "katadata": {"class": KatadataScraper, "params": {}},
+        "kompas": {"class": KompasScraper, "params": {}},
+        "metrotvnews": {"class": MetrotvnewsScraper, "params": {}},
+        "okezone": {"class": OkezoneScraper, "params": {}},
+        "tempo": {"class": TempoScraper, "params": {}},
+        "viva": {"class": VivaScraper, "params": {}},
+        "mediaindonesia": {"class": MediaIndonesiaScraper, "params": {}},
+        # FIX ME: add more scrapers here
+        # FIX ME: add english website reuters, CNBC
+    }
+
+    # Exclude 'kontan' scraper if running on a Linux platform
+    # Currently results in an error when run on the cloud due to Cloudflare ban
+    # Limitation: can scrape a maximum of 50 pages
+    linux_excluded_scrapers = {
+        "bisnis": {"class": BisnisScraper, "params": {}},
+        "jawapos": {"class": JawaposScraper, "params": {}},
+        "kontan": {"class": KontanScraper, "params": {}}
+    }
+    
+    if platform.system().lower() != "linux":
+        scraper_classes.update(linux_excluded_scrapers)
+    
+    return scraper_classes, linux_excluded_scrapers
+
+
 async def main(args):
     start_date = datetime.strptime(args.start_date, "%Y-%m-%d")
     keywords = args.keywords
@@ -142,32 +177,18 @@ async def main(args):
     else:
         writer_task = asyncio.create_task(write_csv(queue_, args.keywords))
 
-    # mapping of scraper names to their corresponding classes and additional parameters
-    scraper_classes = {
-        # FIX ME: fix bisnisindonesia scraper
-        # "bisnisindonesia": {"class": BisnisIndonesiaScraper, "params": {}},
-        "bloombergtechnoz": {"class": BloombergTechnozScraper, "params": {}},
-        "cnbcindonesia": {"class": CNBCScraper, "params": {}},
-        "detik": {"class": DetikScraper, "params": {}},
-        "katadata": {"class": KatadataScraper, "params": {}},
-        "kompas": {"class": KompasScraper, "params": {}},
-        "metrotvnews": {"class": MetrotvnewsScraper, "params": {}},
-        "tempo": {"class": TempoScraper, "params": {}},
-        "viva": {"class": VivaScraper, "params": {}},
-        # FIX ME: add more scrapers here
-        # FIX ME: add english website reuters, CNBC
-    }
+    scraper_classes, linux_excluded_scrapers = get_available_scrapers()
+    
+    force_all_scrapers = selected_scrapers.lower() == "all"
+    
+    if force_all_scrapers and platform.system().lower() == "linux":
+        scraper_classes.update(linux_excluded_scrapers)
+        logging.warning(f"Forcing all scrapers on Linux - may cause errors: {', '.join(linux_excluded_scrapers.keys())}")
+    elif platform.system().lower() == "linux":
+        excluded_names = list(linux_excluded_scrapers.keys())
+        logging.info(f"Running on Linux - excluded scrapers: {', '.join(excluded_names)}")
 
-    # Exclude 'kontan' scraper if running on a Linux platform
-    # Currently results in an error when run on the cloud due to Cloudflare ban
-    # Limitation: can scrape a maximum of 50 pages
-    if platform.system().lower() != "linux":
-        # switch to bisnis.com from bisnisindonesia
-        scraper_classes["bisnis"] = {"class": BisnisScraper, "params": {}}
-        scraper_classes["jawapos"] = {"class": JawaposScraper, "params": {}}
-        scraper_classes["kontan"] = {"class": KontanScraper, "params": {}}
-
-    if selected_scrapers.lower() == "all":
+    if selected_scrapers.lower() in ["all", "auto"]:
         scrapers_to_run = list(scraper_classes.keys())
     else:
         scrapers_to_run = [

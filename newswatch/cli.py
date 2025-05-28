@@ -4,28 +4,12 @@ import logging
 import platform
 from datetime import datetime
 
-from .main import main as run_main
+from .main import main as run_main, get_available_scrapers
 
 
 def cli():
-    base_scrapers = [
-        # "bisnisindonesia",
-        "bisnis",
-        "bloombergtechnoz",
-        "cnbcindonesia",
-        "detik",
-        "katadata",
-        "kompas",
-        "metronews",
-        "viva",
-        "tempo",
-    ]
-
-    is_linux = platform.system().lower() == "linux"
-    non_linux_scrapers = [] if is_linux else ["kontan", "jawapos"]
-
-    # base and platform-specific scrapers
-    available_scrapers = base_scrapers + non_linux_scrapers
+    scraper_classes, linux_excluded_scrapers = get_available_scrapers()
+    available_scrapers = list(scraper_classes.keys())
     available_scrapers_str = ",".join(available_scrapers)
 
     # main description with platform-specific notes
@@ -33,8 +17,9 @@ def cli():
         "News Watch - Scrape news articles from various Indonesian news websites.\n"
         f"Currently supports: {available_scrapers_str}.\n"
     )
-    if is_linux:
-        description += "Note: The 'kontan' and 'jawapos' scrapers are not available on Linux platforms due to known issues."
+    if platform.system().lower() == "linux":
+        excluded_names = list(linux_excluded_scrapers.keys())
+        description += f"Note: The '{', '.join(excluded_names)}' scrapers are not available on Linux platforms due to known issues."
 
     parser = argparse.ArgumentParser(
         description=description,
@@ -55,8 +40,8 @@ def cli():
     parser.add_argument(
         "--scrapers",
         "-s",
-        default="all",
-        help="Comma-separated list of scrapers to use (e.g., 'kompas,viva'). Default is all.",
+        default="auto",
+        help="Comma-separated list of scrapers to use (e.g., 'kompas,viva'). 'auto' uses platform-appropriate scrapers, 'all' forces all scrapers (may fail on some platforms).",
     )
     parser.add_argument(
         "--output_format",

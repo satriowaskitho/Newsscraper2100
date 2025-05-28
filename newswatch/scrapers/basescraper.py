@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
 import dateparser
+import logging
 
 from ..utils import AsyncScraper
 
@@ -29,6 +30,8 @@ class BaseScraper(AsyncScraper, ABC):
 
     async def fetch_search_results(self, keyword):
         page = 1
+        found_articles = False
+        
         while self.continue_scraping:
             response_text = await self.build_search_url(keyword, page)
             if not response_text:
@@ -38,11 +41,15 @@ class BaseScraper(AsyncScraper, ABC):
             if not filtered_hrefs:
                 break
 
+            found_articles = True
             continue_scraping = await self.process_page(filtered_hrefs, keyword)
             if not continue_scraping:
                 break
 
             page += 1
+        
+        if not found_articles:
+            logging.info(f"No news found on {self.base_url} for keyword: '{keyword}'")
 
     async def process_page(self, filtered_hrefs, keyword):
         tasks = [self.get_article(href, keyword) for href in filtered_hrefs]

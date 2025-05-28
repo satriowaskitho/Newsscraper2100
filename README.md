@@ -25,10 +25,17 @@ You can install newswatch via pip:
 pip install news-watch
 ```
 
+After installing the package, you need to install Playwright browsers:
+
+```bash
+playwright install chromium
+```
+
 To install the development version:
 
 ```bash
 pip install git+https://github.com/okkymabruri/news-watch.git@dev
+playwright install chromium
 ```
 
 ## Usage
@@ -44,7 +51,7 @@ Command-Line Arguments
 
 `--start_date`, `-sd`: Required. The start date for scraping in YYYY-MM-DD format (e.g., -sd 2025-01-01).
 
-`--scrapers`, `-s`: Optional. A comma-separated list of scrapers to use (e.g., -s "kompas,viva"). If not provided, all scrapers will be used by default.
+`--scrapers`, `-s`: Optional. A comma-separated list of scrapers to use (e.g., -s "kompas,viva"). Use 'auto' for platform-appropriate scrapers (default), or 'all' to force all scrapers (may fail on some platforms).
 
 `--output_format`, `-of`: Optional. Specify the output format (currently support csv, xlsx).
 
@@ -79,6 +86,12 @@ Scrape articles for specific news website (detik) with excel output format:
 newswatch -k "ihsg" -s "detik" --output_format xlsx
 ```
 
+Force all scrapers (may fail on Linux due to restrictions):
+
+```bash
+newswatch -k "ekonomi" -sd 2025-01-01 -s "all"
+```
+
 ## Run on Google Colab
 
 You can run news-watch on Google Colab [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/okkymabruri/news-watch/blob/main/notebook/run-newswatch-on-colab.ipynb)
@@ -108,13 +121,15 @@ The output file contains the following columns:
 - [Katadata.co.id](https://katadata.co.id/)
 - [Kompas.com](https://www.kompas.com/)
 - [Kontan.co.id](https://www.kontan.co.id/)
+- [Media Indonesia](https://mediaindonesia.com/)
 - [Metrotvnews.com](https://metrotvnews.com/)
+- [Okezone.com](https://www.okezone.com/)
 - [Tempo.co](https://www.tempo.co/)
 - [Viva.co.id](https://www.viva.co.id/)
 
 
 > Note:
-> - Running [Kontan.co.id](https://www.kontan.co.id/) and [Jawapos](https://www.jawapos.com/) on the cloud currently leads to errors due to Cloudflare restrictions.
+> - Some scrapers ([Kontan.co.id](https://www.kontan.co.id/), [Jawapos](https://www.jawapos.com/), [Bisnis.com](https://www.bisnis.com/)) are automatically excluded on Linux platforms due to compatibility issues. Use `-s all` to force all scrapers (may cause errors).
 > - Limitation: [Kontan.co.id](https://www.kontan.co.id/) scraper can process a maximum of 50 pages.
 
 ## Contributing
@@ -130,21 +145,21 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 If you use this software, please cite it using the following:
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15355660.svg)](https://doi.org/10.5281/zenodo.15355660)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15401513.svg)](https://doi.org/10.5281/zenodo.15401513)
 
 ```bibtex
 @software{mabruri_newswatch,
   author       = {Okky Mabruri},
   title        = {news-watch},
-  version      = {0.2.2},
+  version      = {0.2.4},
   year         = {2025},
   publisher    = {Zenodo},
-  doi          = {10.5281/zenodo.14912258},
-  url          = {https://doi.org/10.5281/zenodo.14912258}
+  doi          = {10.5281/zenodo.15401513},
+  url          = {https://doi.org/10.5281/zenodo.15401513}
 }
 ```
 
-Available on Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15355660.svg)](https://doi.org/10.5281/zenodo.15355660)
+Available on Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15401513.svg)](https://doi.org/10.5281/zenodo.15401513)
 
 ### Related Work
 * [indonesia-news-scraper](https://github.com/theyudhiztira/indonesia-news-scraper)
