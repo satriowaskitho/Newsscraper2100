@@ -15,14 +15,13 @@ class KompasScraper(BaseScraper):
 
     async def build_search_url(self, keyword, page):
         return await self.fetch(
-            f"https://www.kompas.com/tag/{keyword.replace(' ', '-')}?page={page}"
+            f"https://search.kompas.com/search?q={keyword}&sort=latest&page={page}",
+            headers={"User-Agent": "Mozilla/5.0"},
         )
 
     def parse_article_links(self, response_text):
         soup = BeautifulSoup(response_text, "html.parser")
-        articles = soup.select(".article__link[href]")
-        if not articles:
-            articles = soup.select(".article-link[href]")
+        articles = soup.select(".article-link[href]")
         if not articles:
             return None
 
