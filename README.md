@@ -121,6 +121,7 @@ The output file contains the following columns:
 - [Katadata.co.id](https://katadata.co.id/)
 - [Kompas.com](https://www.kompas.com/)
 - [Kontan.co.id](https://www.kontan.co.id/)
+- [Media Indonesia](https://mediaindonesia.com/)
 - [Metrotvnews.com](https://metrotvnews.com/)
 - [Tempo.co](https://www.tempo.co/)
 - [Viva.co.id](https://www.viva.co.id/)
@@ -143,21 +144,21 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 If you use this software, please cite it using the following:
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15355660.svg)](https://doi.org/10.5281/zenodo.15355660)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15401513.svg)](https://doi.org/10.5281/zenodo.15401513)
 
 ```bibtex
 @software{mabruri_newswatch,
   author       = {Okky Mabruri},
   title        = {news-watch},
-  version      = {0.2.2},
+  version      = {0.2.3},
   year         = {2025},
   publisher    = {Zenodo},
-  doi          = {10.5281/zenodo.14912258},
-  url          = {https://doi.org/10.5281/zenodo.14912258}
+  doi          = {10.5281/zenodo.15401513},
+  url          = {https://doi.org/10.5281/zenodo.15401513}
 }
 ```
 
-Available on Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15355660.svg)](https://doi.org/10.5281/zenodo.15355660)
+Available on Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15401513.svg)](https://doi.org/10.5281/zenodo.15401513)
 
 ### Related Work
 * [indonesia-news-scraper](https://github.com/theyudhiztira/indonesia-news-scraper)

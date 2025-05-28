@@ -5,6 +5,7 @@ from .jawapos import JawaposScraper
 from .katadata import KatadataScraper
 from .kompas import KompasScraper
 from .kontan import KontanScraper
+from .mediaindonesia import MediaIndonesiaScraper
 from .metrotvnews import MetrotvnewsScraper
 from .tempo import TempoScraper
 from .viva import VivaScraper

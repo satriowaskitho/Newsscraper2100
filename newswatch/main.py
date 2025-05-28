@@ -19,6 +19,7 @@ from .scrapers.jawapos import JawaposScraper
 from .scrapers.katadata import KatadataScraper
 from .scrapers.kompas import KompasScraper
 from .scrapers.kontan import KontanScraper
+from .scrapers.mediaindonesia import MediaIndonesiaScraper
 from .scrapers.metrotvnews import MetrotvnewsScraper
 from .scrapers.tempo import TempoScraper
 from .scrapers.viva import VivaScraper
@@ -129,19 +130,8 @@ async def write_xlsx(queue, keywords, filename=None):
         logging.error(f"Error writing to XLSX: {e}")
 
 
-async def main(args):
-    start_date = datetime.strptime(args.start_date, "%Y-%m-%d")
-    keywords = args.keywords
-    selected_scrapers = args.scrapers
-
-    queue_ = asyncio.Queue()
-
-    output_format = getattr(args, "output_format", "xlsx")
-    if output_format.lower() == "xlsx":
-        writer_task = asyncio.create_task(write_xlsx(queue_, args.keywords))
-    else:
-        writer_task = asyncio.create_task(write_csv(queue_, args.keywords))
-
+def get_available_scrapers():
+    """Get list of available scrapers based on platform"""
     # mapping of scraper names to their corresponding classes and additional parameters
     scraper_classes = {
         # FIX ME: fix bisnisindonesia scraper
@@ -154,6 +144,7 @@ async def main(args):
         "metrotvnews": {"class": MetrotvnewsScraper, "params": {}},
         "tempo": {"class": TempoScraper, "params": {}},
         "viva": {"class": VivaScraper, "params": {}},
+        "mediaindonesia": {"class": MediaIndonesiaScraper, "params": {}},
         # FIX ME: add more scrapers here
         # FIX ME: add english website reuters, CNBC
     }
@@ -167,13 +158,33 @@ async def main(args):
         "kontan": {"class": KontanScraper, "params": {}}
     }
     
+    if platform.system().lower() != "linux":
+        scraper_classes.update(linux_excluded_scrapers)
+    
+    return scraper_classes, linux_excluded_scrapers
+
+
+async def main(args):
+    start_date = datetime.strptime(args.start_date, "%Y-%m-%d")
+    keywords = args.keywords
+    selected_scrapers = args.scrapers
+
+    queue_ = asyncio.Queue()
+
+    output_format = getattr(args, "output_format", "xlsx")
+    if output_format.lower() == "xlsx":
+        writer_task = asyncio.create_task(write_xlsx(queue_, args.keywords))
+    else:
+        writer_task = asyncio.create_task(write_csv(queue_, args.keywords))
+
+    scraper_classes, linux_excluded_scrapers = get_available_scrapers()
+    
     force_all_scrapers = selected_scrapers.lower() == "all"
     
-    if platform.system().lower() != "linux" or force_all_scrapers:
+    if force_all_scrapers and platform.system().lower() == "linux":
         scraper_classes.update(linux_excluded_scrapers)
-        if force_all_scrapers and platform.system().lower() == "linux":
-            logging.warning(f"Forcing all scrapers on Linux - may cause errors: {', '.join(linux_excluded_scrapers.keys())}")
-    else:
+        logging.warning(f"Forcing all scrapers on Linux - may cause errors: {', '.join(linux_excluded_scrapers.keys())}")
+    elif platform.system().lower() == "linux":
         excluded_names = list(linux_excluded_scrapers.keys())
         logging.info(f"Running on Linux - excluded scrapers: {', '.join(excluded_names)}")
 
