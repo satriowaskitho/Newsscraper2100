@@ -151,7 +151,7 @@ If you use this software, please cite it using the following:
 @software{mabruri_newswatch,
   author       = {Okky Mabruri},
   title        = {news-watch},
-  version      = {0.2.3},
+  version      = {0.2.4},
   year         = {2025},
   publisher    = {Zenodo},
   doi          = {10.5281/zenodo.15401513},
