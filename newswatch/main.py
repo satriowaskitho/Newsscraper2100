@@ -152,8 +152,8 @@ async def main(args):
         "katadata": {"class": KatadataScraper, "params": {}},
         "kompas": {"class": KompasScraper, "params": {}},
         "metrotvnews": {"class": MetrotvnewsScraper, "params": {}},
-        "viva": {"class": VivaScraper, "params": {}},
         "tempo": {"class": TempoScraper, "params": {}},
+        "viva": {"class": VivaScraper, "params": {}},
         # FIX ME: add more scrapers here
         # FIX ME: add english website reuters, CNBC
     }
@@ -164,8 +164,8 @@ async def main(args):
     if platform.system().lower() != "linux":
         # switch to bisnis.com from bisnisindonesia
         scraper_classes["bisnis"] = {"class": BisnisScraper, "params": {}}
-        scraper_classes["kontan"] = {"class": KontanScraper, "params": {}}
         scraper_classes["jawapos"] = {"class": JawaposScraper, "params": {}}
+        scraper_classes["kontan"] = {"class": KontanScraper, "params": {}}
 
     if selected_scrapers.lower() == "all":
         scrapers_to_run = list(scraper_classes.keys())

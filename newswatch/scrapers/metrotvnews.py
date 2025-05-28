@@ -26,9 +26,7 @@ class MetrotvnewsScraper(BaseScraper):
         if not articles:
             return None
 
-        filtered_hrefs = {
-            f"{self.base_url}{a.get('href')}" for a in articles if a.get("href")
-        }
+        filtered_hrefs = {f"{a.get('href')}" for a in articles if a.get("href")}
         return filtered_hrefs
 
     async def get_article(self, link, keyword):

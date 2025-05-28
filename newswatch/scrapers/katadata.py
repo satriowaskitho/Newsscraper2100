@@ -1,6 +1,6 @@
-import logging
-import json
 import asyncio
+import json
+import logging
 
 from bs4 import BeautifulSoup
 from playwright.async_api import async_playwright
@@ -20,33 +20,33 @@ class KatadataScraper(BaseScraper):
     async def get_bearer_token(self):
         if self.bearer_token:
             return self.bearer_token
-            
+
         async with async_playwright() as p:
             browser = await p.chromium.launch(headless=True)
             context = await browser.new_context()
             page = await context.new_page()
-            
+
             # Set up request interception to capture the API call with the Bearer token
             api_request = asyncio.Future()
-            
+
             async def handle_request(request):
                 if self.api_url in request.url:
                     headers = request.headers
-                    if 'authorization' in headers:
-                        auth_header = headers['authorization']
-                        if auth_header.startswith('Bearer '):
-                            token = auth_header.split('Bearer ')[1]
+                    if "authorization" in headers:
+                        auth_header = headers["authorization"]
+                        if auth_header.startswith("Bearer "):
+                            token = auth_header.split("Bearer ")[1]
                             if not api_request.done():
                                 api_request.set_result(token)
-            
+
             # Listen for requests
-            await page.route('**/*', lambda route: route.continue_())
-            page.on('request', handle_request)
-            
+            await page.route("**/*", lambda route: route.continue_())
+            page.on("request", handle_request)
+
             # Navigate to search page with a test query
             search_query = f"https://search.{self.base_url}/search?q=&order_by_date=true&from_most_recent=true"
             await page.goto(search_query)
-            
+
             # Wait for the API call to happen and extract token (with 10s timeout)
             try:
                 self.bearer_token = await asyncio.wait_for(api_request, 10)
@@ -54,9 +54,9 @@ class KatadataScraper(BaseScraper):
             except asyncio.TimeoutError:
                 logging.error("Failed to capture Bearer token from network requests")
                 self.bearer_token = None
-            
+
             await browser.close()
-            
+
         return self.bearer_token
 
     async def build_search_url(self, keyword, page):
@@ -71,21 +71,21 @@ class KatadataScraper(BaseScraper):
             "source": "katadata",
             "kanal_or_topic": "",
             "order_by_date": "true",
-            "from_most_recent": "true"
+            "from_most_recent": "true",
         }
-        
+
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {token}",
-            "User-Agent": "Mozilla/5.0"
+            "User-Agent": "Mozilla/5.0",
         }
-        
+
         return await self.fetch(
             self.api_url,
             method="POST",
             data=json.dumps(payload),
             headers=headers,
-            timeout=45
+            timeout=45,
         )
 
     def parse_article_links(self, response_text):
@@ -94,14 +94,13 @@ class KatadataScraper(BaseScraper):
         except Exception as e:
             logging.error(f"Error decoding JSON response: {e}")
             return None
-            
+
         articles = response_json.get("results", [])
         if not articles:
             return None
-            
+
         filtered_hrefs = {
-            article.get("url") for article in articles
-            if article.get("url")
+            article.get("url") for article in articles if article.get("url")
         }
         return filtered_hrefs
 
