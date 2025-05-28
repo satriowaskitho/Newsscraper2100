@@ -27,7 +27,7 @@ class MetrotvnewsScraper(BaseScraper):
             return None
 
         filtered_hrefs = {
-            f"{self.base_url}{a.get('href')}" for a in articles if a.get("href")
+            f"{a.get('href')}" for a in articles if a.get("href")
         }
         return filtered_hrefs
 
