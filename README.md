@@ -25,10 +25,17 @@ You can install newswatch via pip:
 pip install news-watch
 ```
 
+After installing the package, you need to install Playwright browsers:
+
+```bash
+playwright install chromium
+```
+
 To install the development version:
 
 ```bash
 pip install git+https://github.com/okkymabruri/news-watch.git@dev
+playwright install chromium
 ```
 
 ## Usage

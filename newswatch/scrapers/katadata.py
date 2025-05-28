@@ -39,23 +39,35 @@ class KatadataScraper(BaseScraper):
                             if not api_request.done():
                                 api_request.set_result(token)
 
-            # Listen for requests
-            await page.route("**/*", lambda route: route.continue_())
+            async def handle_route(route):
+                await route.continue_()
+
+            # Listen for requests and routes
+            await page.route("**/*", handle_route)
             page.on("request", handle_request)
 
-            # Navigate to search page with a test query
-            search_query = f"https://search.{self.base_url}/search?q=&order_by_date=true&from_most_recent=true"
-            await page.goto(search_query)
-
-            # Wait for the API call to happen and extract token (with 10s timeout)
             try:
-                self.bearer_token = await asyncio.wait_for(api_request, 10)
-                logging.info("Bearer token successfully extracted")
-            except asyncio.TimeoutError:
-                logging.error("Failed to capture Bearer token from network requests")
-                self.bearer_token = None
+                # Navigate to search page with a test query
+                search_query = f"https://search.{self.base_url}/search?q=&order_by_date=true&from_most_recent=true"
+                await page.goto(search_query)
 
-            await browser.close()
+                # Wait for the API call to happen and extract token (with 10s timeout)
+                try:
+                    self.bearer_token = await asyncio.wait_for(api_request, 10)
+                    logging.info("Bearer token successfully extracted")
+                except asyncio.TimeoutError:
+                    logging.error("Failed to capture Bearer token from network requests")
+                    self.bearer_token = None
+
+            finally:
+                # Clean up route handlers before closing
+                try:
+                    await page.unroute("**/*")
+                    page.remove_listener("request", handle_request)
+                except Exception as e:
+                    logging.debug(f"Error during route cleanup: {e}")
+                
+                await browser.close()
 
         return self.bearer_token
 
