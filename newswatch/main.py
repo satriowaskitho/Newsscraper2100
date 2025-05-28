@@ -161,13 +161,23 @@ async def main(args):
     # Exclude 'kontan' scraper if running on a Linux platform
     # Currently results in an error when run on the cloud due to Cloudflare ban
     # Limitation: can scrape a maximum of 50 pages
-    if platform.system().lower() != "linux":
-        # switch to bisnis.com from bisnisindonesia
-        scraper_classes["bisnis"] = {"class": BisnisScraper, "params": {}}
-        scraper_classes["jawapos"] = {"class": JawaposScraper, "params": {}}
-        scraper_classes["kontan"] = {"class": KontanScraper, "params": {}}
+    linux_excluded_scrapers = {
+        "bisnis": {"class": BisnisScraper, "params": {}},
+        "jawapos": {"class": JawaposScraper, "params": {}},
+        "kontan": {"class": KontanScraper, "params": {}}
+    }
+    
+    force_all_scrapers = selected_scrapers.lower() == "all"
+    
+    if platform.system().lower() != "linux" or force_all_scrapers:
+        scraper_classes.update(linux_excluded_scrapers)
+        if force_all_scrapers and platform.system().lower() == "linux":
+            logging.warning(f"Forcing all scrapers on Linux - may cause errors: {', '.join(linux_excluded_scrapers.keys())}")
+    else:
+        excluded_names = list(linux_excluded_scrapers.keys())
+        logging.info(f"Running on Linux - excluded scrapers: {', '.join(excluded_names)}")
 
-    if selected_scrapers.lower() == "all":
+    if selected_scrapers.lower() in ["all", "auto"]:
         scrapers_to_run = list(scraper_classes.keys())
     else:
         scrapers_to_run = [

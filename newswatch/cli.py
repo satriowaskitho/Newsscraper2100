@@ -55,8 +55,8 @@ def cli():
     parser.add_argument(
         "--scrapers",
         "-s",
-        default="all",
-        help="Comma-separated list of scrapers to use (e.g., 'kompas,viva'). Default is all.",
+        default="auto",
+        help="Comma-separated list of scrapers to use (e.g., 'kompas,viva'). 'auto' uses platform-appropriate scrapers, 'all' forces all scrapers (may fail on some platforms).",
     )
     parser.add_argument(
         "--output_format",

@@ -51,7 +51,7 @@ Command-Line Arguments
 
 `--start_date`, `-sd`: Required. The start date for scraping in YYYY-MM-DD format (e.g., -sd 2025-01-01).
 
-`--scrapers`, `-s`: Optional. A comma-separated list of scrapers to use (e.g., -s "kompas,viva"). If not provided, all scrapers will be used by default.
+`--scrapers`, `-s`: Optional. A comma-separated list of scrapers to use (e.g., -s "kompas,viva"). Use 'auto' for platform-appropriate scrapers (default), or 'all' to force all scrapers (may fail on some platforms).
 
 `--output_format`, `-of`: Optional. Specify the output format (currently support csv, xlsx).
 
@@ -84,6 +84,12 @@ Scrape articles for specific news website (detik) with excel output format:
 
 ```bash
 newswatch -k "ihsg" -s "detik" --output_format xlsx
+```
+
+Force all scrapers (may fail on Linux due to restrictions):
+
+```bash
+newswatch -k "ekonomi" -sd 2025-01-01 -s "all"
 ```
 
 ## Run on Google Colab
@@ -121,7 +127,7 @@ The output file contains the following columns:
 
 
 > Note:
-> - Running [Kontan.co.id](https://www.kontan.co.id/) and [Jawapos](https://www.jawapos.com/) on the cloud currently leads to errors due to Cloudflare restrictions.
+> - Some scrapers ([Kontan.co.id](https://www.kontan.co.id/), [Jawapos](https://www.jawapos.com/), [Bisnis.com](https://www.bisnis.com/)) are automatically excluded on Linux platforms due to compatibility issues. Use `-s all` to force all scrapers (may cause errors).
 > - Limitation: [Kontan.co.id](https://www.kontan.co.id/) scraper can process a maximum of 50 pages.
 
 ## Contributing
