@@ -123,6 +123,7 @@ The output file contains the following columns:
 - [Kontan.co.id](https://www.kontan.co.id/)
 - [Media Indonesia](https://mediaindonesia.com/)
 - [Metrotvnews.com](https://metrotvnews.com/)
+- [Okezone.com](https://www.okezone.com/)
 - [Tempo.co](https://www.tempo.co/)
 - [Viva.co.id](https://www.viva.co.id/)
 

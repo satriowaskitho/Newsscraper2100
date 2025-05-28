@@ -10,7 +10,6 @@ import platform
 from datetime import datetime
 from pathlib import Path
 
-# from .scrapers.bisnisindonesia import BisnisIndonesiaScraper
 from .scrapers.bisnis import BisnisScraper
 from .scrapers.bloombergtechnoz import BloombergTechnozScraper
 from .scrapers.cnbcindonesia import CNBCScraper
@@ -21,6 +20,7 @@ from .scrapers.kompas import KompasScraper
 from .scrapers.kontan import KontanScraper
 from .scrapers.mediaindonesia import MediaIndonesiaScraper
 from .scrapers.metrotvnews import MetrotvnewsScraper
+from .scrapers.okezone import OkezoneScraper
 from .scrapers.tempo import TempoScraper
 from .scrapers.viva import VivaScraper
 
@@ -135,13 +135,13 @@ def get_available_scrapers():
     # mapping of scraper names to their corresponding classes and additional parameters
     scraper_classes = {
         # FIX ME: fix bisnisindonesia scraper
-        # "bisnisindonesia": {"class": BisnisIndonesiaScraper, "params": {}},
         "bloombergtechnoz": {"class": BloombergTechnozScraper, "params": {}},
         "cnbcindonesia": {"class": CNBCScraper, "params": {}},
         "detik": {"class": DetikScraper, "params": {}},
         "katadata": {"class": KatadataScraper, "params": {}},
         "kompas": {"class": KompasScraper, "params": {}},
         "metrotvnews": {"class": MetrotvnewsScraper, "params": {}},
+        "okezone": {"class": OkezoneScraper, "params": {}},
         "tempo": {"class": TempoScraper, "params": {}},
         "viva": {"class": VivaScraper, "params": {}},
         "mediaindonesia": {"class": MediaIndonesiaScraper, "params": {}},
