@@ -134,16 +134,15 @@ def get_available_scrapers():
     """Get list of available scrapers based on platform"""
     # mapping of scraper names to their corresponding classes and additional parameters
     scraper_classes = {
-        # FIX ME: fix bisnisindonesia scraper
+        "bisnis": {"class": BisnisScraper, "params": {"concurrency": 5}},
         "bloombergtechnoz": {"class": BloombergTechnozScraper, "params": {}},
-        "cnbcindonesia": {"class": CNBCScraper, "params": {}},
-        "detik": {"class": DetikScraper, "params": {}},
-        "katadata": {"class": KatadataScraper, "params": {}},
-        "kompas": {"class": KompasScraper, "params": {}},
-        "metrotvnews": {"class": MetrotvnewsScraper, "params": {}},
-        "okezone": {"class": OkezoneScraper, "params": {}},
-        "tempo": {"class": TempoScraper, "params": {}},
-        "viva": {"class": VivaScraper, "params": {}},
+        "cnbcindonesia": {"class": CNBCScraper, "params": {"concurrency": 5}},
+        "detik": {"class": DetikScraper, "params": {"concurrency": 5}},
+        "kompas": {"class": KompasScraper, "params": {"concurrency": 7}},
+        "metrotvnews": {"class": MetrotvnewsScraper, "params": {"concurrency": 2}},
+        "okezone": {"class": OkezoneScraper, "params": {"concurrency": 7}},
+        "tempo": {"class": TempoScraper, "params": {"concurrency": 1}},
+        "viva": {"class": VivaScraper, "params": {"concurrency": 7}},
         "mediaindonesia": {"class": MediaIndonesiaScraper, "params": {}},
         # FIX ME: add more scrapers here
         # FIX ME: add english website reuters, CNBC
@@ -153,8 +152,8 @@ def get_available_scrapers():
     # Currently results in an error when run on the cloud due to Cloudflare ban
     # Limitation: can scrape a maximum of 50 pages
     linux_excluded_scrapers = {
-        "bisnis": {"class": BisnisScraper, "params": {}},
-        "jawapos": {"class": JawaposScraper, "params": {}},
+        "katadata": {"class": KatadataScraper, "params": {}},
+        "jawapos": {"class": JawaposScraper, "params": {"concurrency": 5}},
         "kontan": {"class": KontanScraper, "params": {}}
     }
     
