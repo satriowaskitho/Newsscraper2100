@@ -7,7 +7,7 @@ from ..utils import AsyncScraper
 
 
 class BaseScraper(AsyncScraper, ABC):
-    def __init__(self, keywords, concurrency=12, queue_=None):
+    def __init__(self, keywords, concurrency=10, queue_=None):
         super().__init__(concurrency)
         self.keywords = [keyword.strip() for keyword in keywords.split(",")]
         self.queue_ = queue_

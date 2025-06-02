@@ -8,35 +8,25 @@
 news-watch is a Python package that scrapes structured news data from [Indonesia's top news websites](#supported-websites), offering keyword and date filtering queries for targeted research
 
 
-> ### ⚠️ Ethical Considerations & Disclaimer ⚠️
-> **Purpose:** This project is intended for educational and research purposes only. It is not designed for commercial use that could be detrimental to the news source providers.
-> 
-> **User Responsibility:**
-> - Users of this software are solely responsible for their actions and must comply with the Terms of Service and `robots.txt` file of each news website they intend to scrape.
-> - Aggressive scraping or any use that violates a website's terms may lead to IP blocking or other consequences from the website owners.
-> - We strongly advise users to scrape responsibly, respect website limitations, and avoid overloading servers.
+> ### ⚠️ Ethical Considerations & Disclaimer ⚠️  
+> **Purpose:** For educational and research purposes only. Not designed for commercial use that could be detrimental to news source providers.
+>
+> **User Responsibility:** Users must comply with each website's Terms of Service and robots.txt. Aggressive scraping may lead to IP blocking. Scrape responsibly and respect server limitations.
 
 
 ## Installation
 
-You can install newswatch via pip:
-
 ```bash
 pip install news-watch
-```
-
-After installing the package, you need to install Playwright browsers:
-
-```bash
 playwright install chromium
-```
 
-To install the development version:
-
-```bash
+# Development version
 pip install git+https://github.com/okkymabruri/news-watch.git@dev
-playwright install chromium
 ```
+
+## Performance Notes
+
+**⚠️ Works best locally.** Cloud environments (Google Colab, servers) may experience degraded performance or blocking due to anti-bot measures.
 
 ## Usage
 
@@ -45,51 +35,30 @@ To run the scraper from the command line:
 ```bash
 newswatch -k <keywords> -sd <start_date> -s [<scrapers>] -of <output_format> -v
 ```
-Command-Line Arguments
 
-`--keywords`, `-k`: Required. A comma-separated list of keywords to scrape (e.g., -k "ojk,bank,npl").
+**Command-Line Arguments**
 
-`--start_date`, `-sd`: Required. The start date for scraping in YYYY-MM-DD format (e.g., -sd 2025-01-01).
-
-`--scrapers`, `-s`: Optional. A comma-separated list of scrapers to use (e.g., -s "kompas,viva"). Use 'auto' for platform-appropriate scrapers (default), or 'all' to force all scrapers (may fail on some platforms).
-
-`--output_format`, `-of`: Optional. Specify the output format (currently support csv, xlsx).
-
-`--verbose`, `-v`: Optional. Show all logging output (silent by default).
-
-`--list_scrapers`: Optional. List supported scrapers.
+| Argument | Description |
+|----------|-------------|
+| `-k, --keywords` | **Required.** Comma-separated keywords to scrape (e.g., `"ojk,bank,npl"`) |
+| `-sd, --start_date` | **Required.** Start date in YYYY-MM-DD format (e.g., `2025-01-01`) |
+| `-s, --scrapers` | Scrapers to use: specific names (e.g., `"kompas,viva"`), `"auto"` (default, platform-appropriate), or `"all"` (force all, may fail) |
+| `-of, --output_format` | Output format: `csv` or `xlsx` (default: xlsx) |
+| `-v, --verbose` | Show detailed logging output (default: silent) |
+| `--list_scrapers` | List all supported scrapers and exit |
 
 
 ### Examples
 
-Scrape articles related to "ihsg" from January 1st, 2025:
-
 ```bash
+# Basic usage
 newswatch --keywords ihsg --start_date 2025-01-01
-```
 
-Scrape articles for multiple keywords (ihsg, bank, keuangan) with verbose logging:
+# Multiple keywords with specific scraper
+newswatch -k "ihsg,bank" -s "detik" --output_format xlsx -v
 
-```bash
-newswatch -k "ihsg,bank,keuangan" -sd 2025-01-01 -v
-```
-
-List supported scrapers:
-
-```bash
+# List available scrapers
 newswatch --list_scrapers
-```
-
-Scrape articles for specific news website (detik) with excel output format:
-
-```bash
-newswatch -k "ihsg" -s "detik" --output_format xlsx
-```
-
-Force all scrapers (may fail on Linux due to restrictions):
-
-```bash
-newswatch -k "ekonomi" -sd 2025-01-01 -s "all"
 ```
 
 ## Run on Google Colab
@@ -128,9 +97,9 @@ The output file contains the following columns:
 - [Viva.co.id](https://www.viva.co.id/)
 
 
-> Note:
-> - Some scrapers ([Kontan.co.id](https://www.kontan.co.id/), [Jawapos](https://www.jawapos.com/), [Bisnis.com](https://www.bisnis.com/)) are automatically excluded on Linux platforms due to compatibility issues. Use `-s all` to force all scrapers (may cause errors).
-> - Limitation: [Kontan.co.id](https://www.kontan.co.id/) scraper can process a maximum of 50 pages.
+> **Note:** 
+> - On Linux platforms: [Kontan](https://www.kontan.co.id/), [Jawapos](https://www.jawapos.com/), [Katadata](https://katadata.co.id/) are automatically excluded due to compatibility issues. Use `-s all` to force (may cause errors)
+> - Limitation: Kontan scraper maximum 50 pages
 
 ## Contributing
 
@@ -143,23 +112,16 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Citation
 
-If you use this software, please cite it using the following:
-
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15401513.svg)](https://doi.org/10.5281/zenodo.15401513)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14908389.svg)](https://doi.org/10.5281/zenodo.14908389)
 
 ```bibtex
 @software{mabruri_newswatch,
-  author       = {Okky Mabruri},
-  title        = {news-watch},
-  version      = {0.2.4},
-  year         = {2025},
-  publisher    = {Zenodo},
-  doi          = {10.5281/zenodo.15401513},
-  url          = {https://doi.org/10.5281/zenodo.15401513}
+  author = {Okky Mabruri},
+  title = {news-watch},
+  year = {2025},
+  doi = {10.5281/zenodo.14908389}
 }
 ```
-
-Available on Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15401513.svg)](https://doi.org/10.5281/zenodo.15401513)
 
 ### Related Work
 * [indonesia-news-scraper](https://github.com/theyudhiztira/indonesia-news-scraper)

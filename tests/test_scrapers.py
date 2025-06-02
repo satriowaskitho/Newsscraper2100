@@ -3,36 +3,34 @@ from datetime import datetime, timedelta
 
 import pytest
 
-# from newswatch.scrapers.bisnisindonesia import BisnisIndonesiaScraper
 from newswatch.scrapers.bisnis import BisnisScraper
 from newswatch.scrapers.bloombergtechnoz import BloombergTechnozScraper
-# from newswatch.scrapers.cnbcindonesia import CNBCScraper
+from newswatch.scrapers.cnbcindonesia import CNBCScraper
 from newswatch.scrapers.detik import DetikScraper
-from newswatch.scrapers.jawapos import JawaposScraper
-from newswatch.scrapers.katadata import KatadataScraper
+# from newswatch.scrapers.jawapos import JawaposScraper
+# from newswatch.scrapers.katadata import KatadataScraper
 from newswatch.scrapers.kompas import KompasScraper
 # from newswatch.scrapers.kontan import KontanScraper
 from newswatch.scrapers.mediaindonesia import MediaIndonesiaScraper
 from newswatch.scrapers.metrotvnews import MetrotvnewsScraper
 from newswatch.scrapers.okezone import OkezoneScraper
-# from newswatch.scrapers.tempo import TempoScraper
+from newswatch.scrapers.tempo import TempoScraper
 from newswatch.scrapers.viva import VivaScraper
 
 scraper_classes = [
-    # BisnisIndonesiaScraper,
     BisnisScraper,
     BloombergTechnozScraper,
-    # CNBCScraper, # exclude pytest error
+    CNBCScraper,
     DetikScraper,
     # JawaposScraper, # only apply on local
-    KatadataScraper,
+    # KatadataScraper, # only apply on local
     KompasScraper,
     # KontanScraper, # only apply on local
     MediaIndonesiaScraper,
     MetrotvnewsScraper,
     OkezoneScraper,
     VivaScraper,
-    # TempoScraper, # only apply on local
+    TempoScraper,
 ]
 
 
