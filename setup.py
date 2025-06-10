@@ -19,7 +19,7 @@ setup(
         "dateparser==1.2.1",
         "openpyxl==3.1.5",
         "pandas==2.2.2",
-        "requests==2.32.3",
+        "requests==2.32.4",
         "playwright==1.42.0",
     ],
     entry_points={
