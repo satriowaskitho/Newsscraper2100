@@ -14,20 +14,17 @@ class OkezoneScraper(BaseScraper):
         self.continue_scraping = True
 
     async def build_search_url(self, keyword, page):
-        # page 1: no offset, page 2: offset 16, page 3: offset 32
-        offset = (page - 1) * 16
-        url = f"https://search.okezone.com/searchsphinx/loaddata/article/{keyword}/"
-        if page > 1:
-            url += str(offset)
-        
+        # https://search.okezone.com/loaddata/article/ekonomi/1
+        url = f"https://search.okezone.com/loaddata/article/{keyword}/{page}"
+
         return await self.fetch(
             url,
-            headers={"User-Agent": "Mozilla/5.0"},
+            headers={"user-agent": "Mozilla/5.0"},
         )
 
     def parse_article_links(self, response_text):
         soup = BeautifulSoup(response_text, "html.parser")
-        articles = soup.select(".listnews .title a[href]")
+        articles = soup.select("a[href*='/read/']")
         if not articles:
             return None
 
@@ -50,8 +47,15 @@ class OkezoneScraper(BaseScraper):
 
             title = soup.select_one(".title-article h1").get_text(strip=True)
             author = soup.select_one(".journalist a[title]").get("title")
-            publish_date_str = soup.select_one(".journalist span").get_text(strip=True).split("Jurnalis-")[1].strip()
-            
+            publish_date_str = (
+                soup.select_one(".journalist span")
+                .get_text(strip=True)
+                .split("Jurnalis-")[1]
+                .strip()
+                .replace("|", "")
+                .replace("'", "")
+            )
+
             content_div = soup.select_one(".c-detail.read")
 
             # remove unwanted elements
@@ -76,12 +80,14 @@ class OkezoneScraper(BaseScraper):
                     tag.extract()
 
             content = content_div.get_text(separator=" ", strip=True)
-                
+
             publish_date = self.parse_date(publish_date_str, locales=["id"])
             if not publish_date:
-                logging.error(f"Error parsing date for article {link}: {publish_date_str}")
+                logging.error(
+                    f"Error parsing date for article {link}: {publish_date_str}"
+                )
                 return
-                
+
             if self.start_date and publish_date < self.start_date:
                 self.continue_scraping = False
                 return
@@ -98,4 +104,4 @@ class OkezoneScraper(BaseScraper):
             }
             await self.queue_.put(item)
         except Exception as e:
-            logging.error(f"Error parsing article {link}: {e}") 
+            logging.error(f"Error parsing article {link}: {e}")
