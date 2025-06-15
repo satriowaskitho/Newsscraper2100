@@ -1,6 +1,5 @@
 import logging
 import re
-from datetime import date
 from urllib.parse import urlencode
 
 from bs4 import BeautifulSoup
@@ -14,23 +13,29 @@ class AntaranewsScraper(BaseScraper):
         self.base_url = "https://www.antaranews.com"
         self.start_date = start_date
         self.continue_scraping = True
+        self.href_pattern = re.compile(r"https://www\.antaranews\.com/berita/.*")
 
     async def build_search_url(self, keyword, page):
         # https://www.antaranews.com/search?q=prabowo&page=1
-        query_params = {
-            "q": keyword,
-            "page": page
-        }
+        query_params = {"q": keyword, "page": page}
         url = f"{self.base_url}/search?{urlencode(query_params)}"
         return await self.fetch(url, headers={"User-Agent": "Mozilla/5.0"})
 
     def parse_article_links(self, response_text):
         soup = BeautifulSoup(response_text, "html.parser")
-        articles = soup.select(".card__post.card__post-list.card__post__transition.mt-30 a")
+        articles = soup.select(
+            ".card__post.card__post-list.card__post__transition.mt-30 a"
+        )
         if not articles:
             return None
 
-        filtered_hrefs = list({a.get("href") for a in articles if a.get("href")})
+        filtered_hrefs = list(
+            {
+                a.get("href")
+                for a in articles
+                if a.get("href") and self.href_pattern.match(a.get("href"))
+            }
+        )
         return filtered_hrefs
 
     async def get_article(self, link, keyword):
@@ -43,18 +48,21 @@ class AntaranewsScraper(BaseScraper):
             category = soup.select(".breadcrumbs__item")[1].get_text(strip=True)
             title = soup.select_one(".wrap__article-detail-title").get_text(strip=True)
             author = soup.select_one(".text-muted.mt-2.small").get_text()
-            publish_date_str = soup.select_one(".list-inline-item.mr-2").get_text(strip=True).split("|")[0].strip()
+            date_items = soup.select(".list-inline-item.mr-2")
+            publish_date_str = date_items[-1].get_text(strip=True) if date_items else ""
 
             content_div = soup.select_one(".wrap__article-detail-content.post-content")
 
             # loop through paragraphs and remove those with class patterns like "track-*"
-            for tag in content_div.find_all(["span", 'p']):
-                if "baca-juga" in tag.get("class", []) or "text-muted" in tag.get("class", []):
+            for tag in content_div.find_all(["span", "p"]):
+                if "baca-juga" in tag.get("class", []) or "text-muted" in tag.get(
+                    "class", []
+                ):
                     tag.extract()
 
             content = content_div.get_text(separator="\n", strip=True)
 
-            publish_date = self.parse_date(publish_date_str)
+            publish_date = self.parse_date(publish_date_str, locales=["id"])
             if not publish_date:
                 logging.error(f"Error parsing date for article {link}")
                 return

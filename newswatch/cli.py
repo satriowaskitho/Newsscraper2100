@@ -4,7 +4,8 @@ import logging
 import platform
 from datetime import datetime
 
-from .main import main as run_main, get_available_scrapers
+from .main import get_available_scrapers
+from .main import main as run_main
 
 
 def cli():
