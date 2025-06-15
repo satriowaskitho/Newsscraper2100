@@ -10,6 +10,7 @@ import platform
 from datetime import datetime
 from pathlib import Path
 
+from .scrapers.antaranews import AntaranewsScraper
 from .scrapers.bisnis import BisnisScraper
 from .scrapers.bloombergtechnoz import BloombergTechnozScraper
 from .scrapers.cnbcindonesia import CNBCScraper
@@ -134,6 +135,7 @@ def get_available_scrapers():
     """Get list of available scrapers based on platform"""
     # mapping of scraper names to their corresponding classes and additional parameters
     scraper_classes = {
+        "antaranews": {"class": AntaranewsScraper, "params": {"concurrency": 7}},
         "bisnis": {"class": BisnisScraper, "params": {"concurrency": 5}},
         "bloombergtechnoz": {"class": BloombergTechnozScraper, "params": {}},
         "cnbcindonesia": {"class": CNBCScraper, "params": {"concurrency": 5}},
