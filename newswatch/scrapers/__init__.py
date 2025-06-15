@@ -1,3 +1,4 @@
+from .antaranews import AntaranewsScraper
 from .bloombergtechnoz import BloombergTechnozScraper
 from .cnbcindonesia import CNBCScraper
 from .detik import DetikScraper

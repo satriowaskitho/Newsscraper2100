@@ -10,6 +10,7 @@ import platform
 from datetime import datetime
 from pathlib import Path
 
+from .scrapers.antaranews import AntaranewsScraper
 from .scrapers.bisnis import BisnisScraper
 from .scrapers.bloombergtechnoz import BloombergTechnozScraper
 from .scrapers.cnbcindonesia import CNBCScraper
@@ -134,6 +135,7 @@ def get_available_scrapers():
     """Get list of available scrapers based on platform"""
     # mapping of scraper names to their corresponding classes and additional parameters
     scraper_classes = {
+        "antaranews": {"class": AntaranewsScraper, "params": {"concurrency": 7}},
         "bisnis": {"class": BisnisScraper, "params": {"concurrency": 5}},
         "bloombergtechnoz": {"class": BloombergTechnozScraper, "params": {}},
         "cnbcindonesia": {"class": CNBCScraper, "params": {"concurrency": 5}},
@@ -154,12 +156,12 @@ def get_available_scrapers():
     linux_excluded_scrapers = {
         "katadata": {"class": KatadataScraper, "params": {}},
         "jawapos": {"class": JawaposScraper, "params": {"concurrency": 5}},
-        "kontan": {"class": KontanScraper, "params": {}}
+        "kontan": {"class": KontanScraper, "params": {}},
     }
-    
+
     if platform.system().lower() != "linux":
         scraper_classes.update(linux_excluded_scrapers)
-    
+
     return scraper_classes, linux_excluded_scrapers
 
 
@@ -177,15 +179,19 @@ async def main(args):
         writer_task = asyncio.create_task(write_csv(queue_, args.keywords))
 
     scraper_classes, linux_excluded_scrapers = get_available_scrapers()
-    
+
     force_all_scrapers = selected_scrapers.lower() == "all"
-    
+
     if force_all_scrapers and platform.system().lower() == "linux":
         scraper_classes.update(linux_excluded_scrapers)
-        logging.warning(f"Forcing all scrapers on Linux - may cause errors: {', '.join(linux_excluded_scrapers.keys())}")
+        logging.warning(
+            f"Forcing all scrapers on Linux - may cause errors: {', '.join(linux_excluded_scrapers.keys())}"
+        )
     elif platform.system().lower() == "linux":
         excluded_names = list(linux_excluded_scrapers.keys())
-        logging.info(f"Running on Linux - excluded scrapers: {', '.join(excluded_names)}")
+        logging.info(
+            f"Running on Linux - excluded scrapers: {', '.join(excluded_names)}"
+        )
 
     if selected_scrapers.lower() in ["all", "auto"]:
         scrapers_to_run = list(scraper_classes.keys())
