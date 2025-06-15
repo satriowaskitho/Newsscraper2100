@@ -82,6 +82,7 @@ The output file contains the following columns:
 
 ## Supported Websites
 
+- [Antaranews.com](https://www.antaranews.com/)
 - [Bisnis.com](https://www.bisnis.com/)
 - [Bloomberg Technoz](https://www.bloombergtechnoz.com/)
 - [CNBC Indonesia](https://www.cnbcindonesia.com/)
