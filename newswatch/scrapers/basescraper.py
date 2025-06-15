@@ -1,7 +1,7 @@
+import logging
 from abc import ABC, abstractmethod
 
 import dateparser
-import logging
 
 from ..utils import AsyncScraper
 
@@ -14,7 +14,10 @@ class BaseScraper(AsyncScraper, ABC):
         self.continue_scraping = True
 
     def parse_date(self, date_string, **kwargs):
-        return dateparser.parse(date_string, **kwargs).replace(tzinfo=None)
+        parsed_date = dateparser.parse(date_string, **kwargs)
+        if parsed_date:
+            return parsed_date.replace(tzinfo=None)
+        return None
 
     @abstractmethod
     async def build_search_url(self, keyword, page):
@@ -31,7 +34,7 @@ class BaseScraper(AsyncScraper, ABC):
     async def fetch_search_results(self, keyword):
         page = 1
         found_articles = False
-        
+
         while self.continue_scraping:
             response_text = await self.build_search_url(keyword, page)
             if not response_text:
@@ -47,7 +50,7 @@ class BaseScraper(AsyncScraper, ABC):
                 break
 
             page += 1
-        
+
         if not found_articles:
             logging.info(f"No news found on {self.base_url} for keyword: '{keyword}'")
 

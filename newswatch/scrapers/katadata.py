@@ -56,7 +56,9 @@ class KatadataScraper(BaseScraper):
                     self.bearer_token = await asyncio.wait_for(api_request, 10)
                     logging.info("Bearer token successfully extracted")
                 except asyncio.TimeoutError:
-                    logging.error("Failed to capture Bearer token from network requests")
+                    logging.error(
+                        "Failed to capture Bearer token from network requests"
+                    )
                     self.bearer_token = None
 
             finally:
@@ -66,7 +68,7 @@ class KatadataScraper(BaseScraper):
                     page.remove_listener("request", handle_request)
                 except Exception as e:
                     logging.debug(f"Error during route cleanup: {e}")
-                
+
                 await browser.close()
 
         return self.bearer_token

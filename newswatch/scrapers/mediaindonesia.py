@@ -20,7 +20,7 @@ class MediaIndonesiaScraper(BaseScraper):
             payload = {"q": keyword}
         else:
             payload = {"q": keyword, "next": str(page - 1)}
-        
+
         return await self.fetch(url, method="POST", data=payload)
 
     def parse_article_links(self, response_text):
@@ -45,16 +45,18 @@ class MediaIndonesiaScraper(BaseScraper):
         try:
             category = soup.select_one(".mi-breadcrumb").get_text()
 
-            title = soup.select_one("h1").get_text(strip=True)            
+            title = soup.select_one("h1").get_text(strip=True)
             author = soup.select_one(".author-2").get_text(strip=True)
             publish_date_str = soup.select_one(".datetime").get_text(strip=True)
-            
+
             content_div = soup.select_one("div.article")
-            
+
             # remove unwanted elements
-            for elem in content_div.select("p.related-news, .flying-carpet, .ext-channel, .info-author, ._ap_apex_ad, script, .dfp-ad"):
+            for elem in content_div.select(
+                "p.related-news, .flying-carpet, .ext-channel, .info-author, ._ap_apex_ad, script, .dfp-ad"
+            ):
                 elem.decompose()
-            
+
             content = content_div.get_text(separator=" ", strip=True)
 
             publish_date = self.parse_date(publish_date_str, locales=["id"])
@@ -77,4 +79,4 @@ class MediaIndonesiaScraper(BaseScraper):
             }
             await self.queue_.put(item)
         except Exception as e:
-            logging.error(f"Error parsing article {link}: {e}") 
+            logging.error(f"Error parsing article {link}: {e}")
