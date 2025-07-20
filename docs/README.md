@@ -26,11 +26,11 @@ playwright install chromium
 newswatch --keywords "bank,kredit" --start_date 2025-01-01
 
 # Use the Python API for data analysis
-python -c "
+```python
 import newswatch as nw
 df = nw.scrape_to_dataframe('ihsg', '2025-01-01')
 print(f'Found {len(df)} stock market articles')
-"
+```
 ```
 
 ## Example Use Cases
@@ -56,30 +56,31 @@ tech_news = nw.quick_scrape("startup,fintech,ai", days_back=7)
 
 news-watch currently supports these Indonesian news websites:
 
-| Source | Domain | Focus Areas |
-|--------|--------|-------------|
-| Antara News | antaranews.com | General news, government |
-| Bisnis.com | bisnis.com | Business, economy |
-| Bloomberg Technoz | teknologi.bisnis.com | Technology, business |
-| CNN Indonesia | cnnindonesia.com | General news, international |
-| Detik | detik.com | General news, lifestyle |
-| Jawa Pos | jawapos.com | Regional news, general |
-| Katadata | katadata.co.id | Data journalism, economy |
-| Kompas | kompas.com | General news, politics |
-| Kontan | kontan.co.id | Financial news, markets |
-| Media Indonesia | mediaindonesia.com | General news |
-| Metro TV News | metrotvnews.com | General news, politics |
-| Okezone | okezone.com | Entertainment, lifestyle |
-| Tempo | tempo.co | Investigative journalism |
-| Viva | viva.co.id | General news, sports |
+| Source | Domain |
+|--------|--------|
+| Antara News | antaranews.com |
+| Bisnis.com | bisnis.com |
+| Bloomberg Technoz | www.bloombergtechnoz.com |
+| CNBC Indonesia | www.cnbcindonesia.com |
+| Detik | detik.com |
+| Jawa Pos | jawapos.com |
+| Katadata | katadata.co.id |
+| Kompas | kompas.com |
+| Kontan | kontan.co.id |
+| Media Indonesia | mediaindonesia.com |
+| Metro TV News | metrotvnews.com |
+| Okezone | okezone.com |
+| Tempo | tempo.co |
+| Viva | viva.co.id |
 
 ## Getting Started
 
 Ready to dive in? Here's where to go next:
 
 1. **[Getting Started Guide](getting-started.md)** - Installation, setup, and your first scraping session
-2. **[API Reference](api-reference.md)** - Complete documentation of all functions and parameters
-3. **[Troubleshooting](troubleshooting.md)** - Common issues and solutions
+2. **[Comprehensive Guide](comprehensive-guide.md)** - Complete tutorial with examples from basic to advanced usage
+3. **[API Reference](api-reference.md)** - Complete documentation of all functions and parameters
+4. **[Troubleshooting](troubleshooting.md)** - Common issues and solutions
 
 ## Important Considerations
 

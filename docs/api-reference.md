@@ -291,73 +291,20 @@ except Exception as e:
 
 ## Advanced Usage Examples
 
-### Comparative News Analysis
+For comprehensive examples including comparative analysis, time series analysis, content analysis, error handling best practices, integration patterns, and troubleshooting guides, see our **[Comprehensive Guide](comprehensive-guide.md)**.
 
-Compare how different sources cover the same topics:
+The comprehensive guide covers:
 
-```python
-import newswatch as nw
-import pandas as pd
+- **Multi-topic research workflows**
+- **Content analysis and sentiment detection**
+- **Source comparison and coverage analysis**
+- **Time-based analysis and trend detection**
+- **Error handling best practices**
+- **Integration with Jupyter notebooks**
+- **Large dataset management strategies**
+- **Troubleshooting common issues**
 
-# Get political coverage from major sources
-politics = nw.scrape_to_dataframe(
-    "politik,pemerintah,dpr", 
-    "2025-01-01",
-    scrapers="kompas,tempo,detik,cnbcindonesia"
-)
-
-# Coverage matrix
-coverage = politics.groupby(['source', 'keyword']).size().unstack(fill_value=0)
-print("Coverage comparison:")
-print(coverage)
-```
-
-### Time Series Analysis
-
-Track news volume over time:
-
-```python
-import newswatch as nw
-import matplotlib.pyplot as plt
-
-# Collect data for multiple time periods
-all_data = []
-for days in range(1, 8):  # Last 7 days
-    daily_data = nw.quick_scrape("ekonomi", days_back=days)
-    all_data.append(daily_data)
-
-# Combine and analyze trends
-df = pd.concat(all_data, ignore_index=True).drop_duplicates()
-daily_volume = df.groupby(df['publish_date'].dt.date).size()
-
-# Plot the trend
-daily_volume.plot(kind='line', title='Economic News Volume Over Time')
-plt.show()
-```
-
-### Content Analysis
-
-Analyze article characteristics:
-
-```python
-import newswatch as nw
-
-tech_news = nw.scrape_to_dataframe("teknologi,ai,digital", "2025-01-01")
-
-# Article length analysis
-tech_news['word_count'] = tech_news['content'].str.split().str.len()
-tech_news['title_length'] = tech_news['title'].str.len()
-
-# Summary by source
-summary = tech_news.groupby('source').agg({
-    'word_count': ['mean', 'std'],
-    'title_length': 'mean',
-    'title': 'count'
-}).round(2)
-
-print("Article characteristics by source:")
-print(summary)
-```
+All examples are tested, practical, and use safe generic keywords appropriate for research purposes.
 
 ## Performance Tips
 
