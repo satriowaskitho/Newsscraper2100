@@ -5,6 +5,7 @@
 *.DS_store
 .vscode/
 .cursor/
+.claude/
 
 ## AI
 CLAUDE*
