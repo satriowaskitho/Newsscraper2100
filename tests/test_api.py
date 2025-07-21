@@ -180,7 +180,6 @@ class TestConvenienceFunctions:
         mock_quick_scrape.assert_called_once_with("ihsg,bursa,saham", 3)
 
 
-@pytest.mark.integration
 class TestAPIIntegration:
     """Integration tests for the API (require network access)."""
     
