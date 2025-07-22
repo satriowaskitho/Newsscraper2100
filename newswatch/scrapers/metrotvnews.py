@@ -9,14 +9,14 @@ from .basescraper import BaseScraper
 class MetrotvnewsScraper(BaseScraper):
     def __init__(self, keywords, concurrency=5, start_date=None, queue_=None):
         super().__init__(keywords, concurrency, queue_)
-        self.base_url = "https://metrotvnews.com"
+        self.base_url = "https://www.metrotvnews.com"
         self.start_date = start_date
         self.continue_scraping = True
 
     async def build_search_url(self, keyword, page):
-        # https://metrotvnews.com/search/ekonomi%20indonesia/0
+        # https://www.metrotvnews.com/search?query=ekonomi
         return await self.fetch(
-            f"https://metrotvnews.com/search/{keyword.replace(' ', '%20')}/{page-1}"
+            f"https://www.metrotvnews.com/search?query={keyword.replace(' ', '%20')}"
         )
 
     def parse_article_links(self, response_text):

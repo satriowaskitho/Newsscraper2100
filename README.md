@@ -61,6 +61,37 @@ newswatch -k "ihsg,bank" -s "detik" --output_format xlsx -v
 newswatch --list_scrapers
 ```
 
+## Python API Usage
+
+```python
+import newswatch as nw
+
+# Basic scraping - returns list of article dictionaries
+articles = nw.scrape("ekonomi,politik", "2025-01-01")
+print(f"Found {len(articles)} articles")
+
+# Get results as pandas DataFrame for analysis
+df = nw.scrape_to_dataframe("teknologi,startup", "2025-01-01")
+print(df['source'].value_counts())
+
+# Save directly to file
+nw.scrape_to_file(
+    keywords="bank,ihsg", 
+    start_date="2025-01-01",
+    output_path="financial_news.xlsx"
+)
+
+# Quick recent news
+recent_news = nw.quick_scrape("politik", days_back=3)
+
+# Get available news sources
+sources = nw.list_scrapers()
+print("Available sources:", sources)
+```
+
+See the [comprehensive guide](docs/comprehensive-guide.md) for detailed usage examples and advanced patterns.
+For interactive examples, see the [API reference notebook](notebook/api-reference.ipynb).
+
 ## Run on Google Colab
 
 You can run news-watch on Google Colab [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/okkymabruri/news-watch/blob/main/notebook/run-newswatch-on-colab.ipynb)
