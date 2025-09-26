@@ -4,8 +4,8 @@ Synchronous Python API for newswatch.
 This module provides synchronous wrapper functions around the async newswatch functionality,
 making it easy to use newswatch in scripts and interactive environments.
 
-author: Okky Mabruri <okkymbrur@gmail.com>
-maintainer: Okky Mabruri <okkymbrur@gmail.com>
+author: Muhammad Rizki <muhammadrizky15.mr@gmail.com>
+maintainer: Muhammad Rizki <muhammadrizky15.mr@gmail.com>
 """
 
 import asyncio

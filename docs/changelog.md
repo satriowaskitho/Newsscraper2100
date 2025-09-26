@@ -157,6 +157,6 @@ Breaking changes in v0.2.0:
 
 ## Support
 
-For bug reports and feature requests, please visit our [GitHub Issues](https://github.com/okkymabruri/news-watch/issues).
+For bug reports and feature requests, please visit our [GitHub Issues]().
 
-For general questions and discussion, see our [documentation](https://github.com/okkymabruri/news-watch/tree/main/docs).
+For general questions and discussion, see our [documentation]().
