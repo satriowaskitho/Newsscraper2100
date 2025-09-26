@@ -15,6 +15,3 @@ vaderSentiment==3.3.2
 
 # Web Framework
 streamlit==1.49.1
-
-newspaper3k
-lxml[html_clean]
