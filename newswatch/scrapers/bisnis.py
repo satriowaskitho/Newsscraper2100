@@ -5,6 +5,8 @@ from bs4 import BeautifulSoup
 
 from .basescraper import BaseScraper
 
+from .sentiment import classify_sentiment_id
+
 
 class BisnisScraper(BaseScraper):
     def __init__(self, keywords, concurrency=12, start_date=None, queue_=None):
@@ -76,6 +78,8 @@ class BisnisScraper(BaseScraper):
                     tag.extract()
 
             content = content_div.get_text(separator=" ", strip=True)
+            
+            sentiment = classify_sentiment_id(title)
 
             publish_date = self.parse_date(publish_date_str)
             if not publish_date:
@@ -94,6 +98,7 @@ class BisnisScraper(BaseScraper):
                 "category": category,
                 "source": self.base_url,
                 "link": link,
+                "sentiment": sentiment
             }
             await self.queue_.put(item)
         except Exception as e:

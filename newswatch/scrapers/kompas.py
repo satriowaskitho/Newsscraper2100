@@ -2,8 +2,9 @@ import logging
 import re
 
 from bs4 import BeautifulSoup
-
 from .basescraper import BaseScraper
+
+from .sentiment import classify_sentiment_id
 
 
 class KompasScraper(BaseScraper):
@@ -74,6 +75,9 @@ class KompasScraper(BaseScraper):
                     tag.extract()
 
             content = content_div.get_text(separator=" ", strip=True)
+            
+            sentiment = classify_sentiment_id(title)
+            
 
             publish_date = self.parse_date(publish_date_str, locales=["id"])
             if not publish_date:
@@ -92,6 +96,7 @@ class KompasScraper(BaseScraper):
                 "category": category,
                 "source": self.base_url.split("www.")[1],
                 "link": link,
+                "sentiment": sentiment
             }
             await self.queue_.put(item)
         except Exception as e:

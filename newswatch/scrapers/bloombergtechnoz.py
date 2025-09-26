@@ -5,6 +5,8 @@ from bs4 import BeautifulSoup
 
 from .basescraper import BaseScraper
 
+from .sentiment import classify_sentiment_id
+
 
 class BloombergTechnozScraper(BaseScraper):
     def __init__(self, keywords, concurrency=12, start_date=None, queue_=None):
@@ -68,6 +70,7 @@ class BloombergTechnozScraper(BaseScraper):
                         separator=" ", strip=True
                     ) + content_div2.get_text(separator=" ", strip=True)
 
+            sentiment = classify_sentiment_id(title)
             publish_date = self.parse_date(publish_date_str)
             if not publish_date:
                 logging.error(f"Error parsing date for article {link}")
@@ -85,6 +88,7 @@ class BloombergTechnozScraper(BaseScraper):
                 "category": category,
                 "source": self.base_url.split("www.")[1],
                 "link": link,
+                "sentiment": sentiment
             }
             await self.queue_.put(item)
         except Exception as e:

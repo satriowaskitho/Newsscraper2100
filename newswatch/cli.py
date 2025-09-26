@@ -29,7 +29,7 @@ def cli():
     parser.add_argument(
         "--keywords",
         "-k",
-        default="ihsg",
+        default="",
         help="Comma-separated list of keywords to scrape (e.g., 'ojk,bank,npl')",
     )
     parser.add_argument(

@@ -6,6 +6,8 @@ from bs4 import BeautifulSoup, Comment
 
 from .basescraper import BaseScraper
 
+from .sentiment import classify_sentiment_id
+
 
 class KontanScraper(BaseScraper):
     def __init__(self, keywords, concurrency=12, start_date=None, queue_=None):
@@ -83,6 +85,8 @@ class KontanScraper(BaseScraper):
             # join the accumulated elements and parse again to get cleaned text
             content_part = BeautifulSoup("".join(filtered_content), "html.parser")
             content = content_part.get_text(separator="\n", strip=True)
+            
+            sentiment = classify_sentiment_id(title)
 
             publish_date = self.parse_date(publish_date_str)
             if not publish_date:
@@ -101,6 +105,7 @@ class KontanScraper(BaseScraper):
                 "category": category,
                 "source": self.base_url.split("www.")[1],
                 "link": link,
+                "sentiment": sentiment
             }
             await self.queue_.put(item)
         except Exception as e:
