@@ -93,6 +93,9 @@ def show_output_preview(file_path, output_format):
             st.metric("Total Columns", len(df.columns))
         with col3:
             st.metric("File Size", f"{os.path.getsize(file_path) / 1024:.1f} KB")
+        with col4:
+            if duration is not None:
+                st.metric("Scraping Time", f"{duration:.2f} s")
         
         st.write("### 🔍 Preview Hasil")
         st.dataframe(df.set_index(pd.Index(range(1, len(df)+1))))
@@ -192,7 +195,9 @@ if submitted:
     # Progress indicator
     with st.spinner("🔄 Menjalankan scraper..."):
         try:
+            start_time = time.time()
             result = subprocess.run(cmd, capture_output=True, text=True, check=True, timeout=600)
+            duration = time.time() - start_time
             st.success("✅ Scraping selesai!")
             
             # Show command output
