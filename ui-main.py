@@ -170,7 +170,7 @@ with st.form("scraper_form"):
 
 # Handle form submission
 if submitted:
-    cmd = [sys.executable, "newswatch/cli.py"]
+    cmd = [sys.executable, "-m", "newswatch.cli"]
 
     if keywords:
         cmd += ["--keywords", keywords]
