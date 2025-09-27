@@ -5,6 +5,7 @@ import sys
 import pandas as pd
 import os
 import glob
+import time
 from pathlib import Path
 
 st.set_page_config(page_title="FAKTA: Fenomena Aktual Terkini", page_icon="📰", layout="centered")
@@ -86,7 +87,7 @@ def show_output_preview(file_path, output_format):
             df = pd.read_excel(file_path)
         
         st.write("### 📊 File Information")
-        col1, col2, col3 = st.columns(3)
+        col1, col2, col3, col4 = st.columns(4)
         with col1:
             st.metric("Total Rows", len(df))
         with col2:
