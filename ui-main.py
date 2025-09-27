@@ -242,5 +242,4 @@ st.write("""
 6. `category` - Article category
 7. `source` - News source website
 8. `link` - Original article URL
-9. `sentiment` - Sentiment classification (positif, negatif, netral)
 """)

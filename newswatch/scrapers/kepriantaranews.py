@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 
 from .basescraper import BaseScraper
 
-from .sentiment import classify_sentiment_id
+# from .sentiment import classify_sentiment_id
 
 
 class KepriAntaranewsScraper(BaseScraper):
@@ -268,7 +268,7 @@ class KepriAntaranewsScraper(BaseScraper):
                 logging.warning(f"Could not extract content from {link}")
                 return
             
-            sentiment = classify_sentiment_id(title)
+         #    sentiment = classify_sentiment_id(title)
 
             # *** KEYWORD RELEVANCE CHECK ***
             # Check if the article is actually related to our search keyword
@@ -310,7 +310,7 @@ class KepriAntaranewsScraper(BaseScraper):
                 "category": category,
                 "source": "kepri.antaranews.com",
                 "link": link,
-                "sentiment": sentiment
+             #    "sentiment": sentiment
             }
             
             await self.queue_.put(item)

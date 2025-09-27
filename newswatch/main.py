@@ -71,7 +71,7 @@ async def write_csv(queue: asyncio.Queue, keywords: str, filename: Optional[str]
     """
     fieldnames = [
         "title", "publish_date", "author", "content", 
-        "keyword", "category", "source", "link", "sentiment"
+        "keyword", "category", "source", "link"
     ]
 
     current_time = datetime.now().strftime("%Y%m%d_%H")
@@ -153,7 +153,7 @@ async def write_xlsx(queue: asyncio.Queue, keywords: str, filename: Optional[str
 
     fieldnames = [
         "title", "publish_date", "author", "content",
-        "keyword", "category", "source", "link", "sentiment"
+        "keyword", "category", "source", "link"
     ]
     
     current_time = datetime.now().strftime("%Y%m%d_%H")

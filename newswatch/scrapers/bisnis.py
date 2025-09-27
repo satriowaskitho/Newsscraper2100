@@ -98,7 +98,7 @@ class BisnisScraper(BaseScraper):
                 "category": category,
                 "source": self.base_url,
                 "link": link,
-                "sentiment": sentiment
+                # "sentiment": sentiment
             }
             await self.queue_.put(item)
         except Exception as e:

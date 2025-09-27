@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 
 from .basescraper import BaseScraper
 
-from .sentiment import classify_sentiment_id
+# from .sentiment import classify_sentiment_id
 
 class VivaScraper(BaseScraper):
     def __init__(self, keywords, concurrency=12, start_date=None, queue_=None):
@@ -71,7 +71,7 @@ class VivaScraper(BaseScraper):
             ):
                 elem.decompose()
             content = content_div.get_text(separator=" ", strip=True)
-            sentiment = classify_sentiment_id(title)
+           #  sentiment = classify_sentiment_id(title)
             
             item = {
                 "title": title,
@@ -82,7 +82,7 @@ class VivaScraper(BaseScraper):
                 "category": category,
                 "source": self.base_url.split("www.")[1],
                 "link": link,
-                "sentiment": sentiment
+             #    "sentiment": sentiment
             }
             await self.queue_.put(item)
         except Exception as e:

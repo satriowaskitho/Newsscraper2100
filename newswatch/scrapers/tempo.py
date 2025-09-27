@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 
 from .basescraper import BaseScraper
 
-from .sentiment import classify_sentiment_id
+# from .sentiment import classify_sentiment_id
 
 
 class TempoScraper(BaseScraper):
@@ -65,7 +65,7 @@ class TempoScraper(BaseScraper):
             publish_date_str = ld_json.get("datePublished", "")
             content = ld_json.get("articleBody", "")
             
-            sentiment = classify_sentiment_id(title)
+          #   sentiment = classify_sentiment_id(title)
 
             author_field = ld_json.get("author", "")
             if isinstance(author_field, list):
@@ -94,7 +94,7 @@ class TempoScraper(BaseScraper):
                 "category": category,
                 "source": self.base_url.split("www.")[1],
                 "link": link,
-                "sentiment": sentiment
+               #  "sentiment": sentiment
             }
             await self.queue_.put(item)
         except Exception as e:
