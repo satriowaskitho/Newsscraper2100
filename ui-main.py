@@ -49,7 +49,7 @@ st.markdown("""
 
 # Available scrapers
 available_scrapers = [
-    "auto", "all", "antaranews", "bisnis", "bloombergtechnoz", 
+    "all", "antaranews", "bisnis", "bloombergtechnoz", 
     "cnbcindonesia", "detik", "jawapos", "katadata", "kepriantaranews", "kompas", 
     "kontan", "mediaindonesia", "metrotvnews", "okezone", "tempo", "viva"
 ]
@@ -160,7 +160,7 @@ with st.form("scraper_form"):
         start_date = st.date_input("Start Date", date.today())
         
     with col2:
-        scrapers = st.multiselect("Pilih Scrapers", available_scrapers, default=["auto"])
+        scrapers = st.multiselect("Pilih Scrapers", available_scrapers, default=["all"])
         output_format = st.selectbox("Output Format", ["csv", "xlsx"])
 
     submitted = st.form_submit_button("🚀 Run Scraper", type="primary")
