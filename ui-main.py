@@ -177,10 +177,6 @@ if submitted:
         cmd += ["--scrapers", ",".join(scrapers)]
     if output_format:
         cmd += ["--output_format", output_format]
-    if verbose:
-        cmd.append("--verbose")
-    if list_scrapers:
-        cmd.append("--list_scrapers")
 
     st.write("---")
     st.write("### 🔄 Execution")
