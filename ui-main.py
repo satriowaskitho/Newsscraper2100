@@ -8,7 +8,7 @@ import glob
 import time
 from pathlib import Path
 
-st.set_page_config(page_title="FAKTA: Fenomena Aktual Terkini", page_icon="📰", layout="centered")
+st.set_page_config(page_title="FENALTI: Fenomena Multi-Fungsi", page_icon="📰", layout="centered")
 
 # Header Section
 st.markdown("""
@@ -39,8 +39,8 @@ st.markdown("""
 
 st.markdown("""
 <div class="main-header">
-    <div class="header-title">📰 FAKTA</div>
-    <div class="header-subtitle">Fenomena Aktual Terkini 2100</div>
+    <div class="header-title">📰 FENALTI</div>
+    <div class="header-subtitle">Fenomena Multi-Fungsi</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -87,14 +87,13 @@ def show_output_preview(file_path, output_format):
             df = pd.read_excel(file_path)
         
         st.write("### 📊 File Information")
-        col1, col2, col3, col4 = st.columns(4)
+        col1, col2, col3 = st.columns(3)
         with col1:
             st.metric("Total Rows", len(df))
         with col2:
-            st.metric("Total Columns", len(df.columns))
+            file_size_mb = os.path.getsize(file_path) / (1024 * 1024)
+            st.metric("File Size", f"{file_size_mb:.2f} MB")
         with col3:
-            st.metric("File Size", f"{os.path.getsize(file_path) / 1024:.1f} KB")
-        with col4:
             if duration is not None:
                 st.metric("Scraping Time", f"{duration:.2f} s")
         
@@ -163,12 +162,6 @@ with st.form("scraper_form"):
     with col2:
         scrapers = st.multiselect("Pilih Scrapers", available_scrapers, default=["auto"])
         output_format = st.selectbox("Output Format", ["csv", "xlsx"])
-    
-    col3, col4 = st.columns(2)
-    with col3:
-        verbose = st.checkbox("Verbose logging")
-    with col4:
-        list_scrapers = st.checkbox("List available scrapers only")
 
     submitted = st.form_submit_button("🚀 Run Scraper", type="primary")
 
