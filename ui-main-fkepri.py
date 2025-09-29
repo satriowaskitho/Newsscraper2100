@@ -99,6 +99,8 @@ def show_output_preview(file_path, output_format, only_kepri=False):
                 df["content"].str.contains("anambas", case=False, na=False) |
                 df["content"].str.contains("natuna", case=False, na=False)
             ]
+            
+        st.session_state.df = df
         
         st.write("### 📊 File Information")
         col1, col2, col3 = st.columns(3)
@@ -111,9 +113,11 @@ def show_output_preview(file_path, output_format, only_kepri=False):
             if duration is not None:
                 st.metric("Scraping Time", f"{duration:.2f} s")
         
-        st.write("### 🔍 Preview Hasil")
-        st.dataframe(df.set_index(pd.Index(range(1, len(df)+1))))
-        
+        # Ketika scraper selesai, tampilkan hasil preview jika ada
+        if "df" in st.session_state:
+            st.write("### 🔍 Preview Hasil")
+            st.dataframe(st.session_state.df.set_index(pd.Index(range(1, len(st.session_state.df) + 1))))
+
         # --- Tentukan nama file download ---
         if only_kepri:
             if output_format == "csv":
@@ -201,6 +205,11 @@ with st.form("scraper_form"):
 
 # Handle form submission
 if submitted:
+    
+    # Reset session state when scraper is run again
+    if "df" in st.session_state:
+        del st.session_state["df"]
+    
     cmd = [sys.executable, "-m", "newswatch.cli"]
 
     if keywords:

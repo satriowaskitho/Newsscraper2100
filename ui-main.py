@@ -9,13 +9,13 @@ import time
 from pathlib import Path
 from io import BytesIO
 
-st.set_page_config(page_title="FENALTI: Fenomena Multi-Fungsi", page_icon="📰", layout="centered")
+st.set_page_config(page_title="FENALTI: Fenomena Multi-Fungsi", page_icon="📰", layout="wide", initial_sidebar_state="auto")
 
 # Header Section
 st.markdown("""
 <style>
     .main-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #FF9A00 0%, #FFD93D 100%);
         padding: 2rem 0;
         margin: -1rem -1rem 2rem -1rem;
         border-radius: 0 0 20px 20px;
@@ -40,8 +40,7 @@ st.markdown("""
 
 st.markdown("""
 <div class="main-header">
-    <div class="header-title">📰 FENALTI</div>
-    <div class="header-subtitle">Fenomena Multi-Fungsi</div>
+    <div class="header-title">📰 FENALTI: Fenomena Multi-Fungsi</div>
 </div>
 """, unsafe_allow_html=True)
 
