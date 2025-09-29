@@ -7,6 +7,7 @@ import os
 import glob
 import time
 from pathlib import Path
+from io import BytesIO
 
 st.set_page_config(page_title="FENALTI: Fenomena Multi-Fungsi", page_icon="📰", layout="centered")
 
@@ -78,13 +79,26 @@ def find_latest_output_file(output_format, keywords=None):
         return max(files, key=os.path.getctime)
     return None
 
-def show_output_preview(file_path, output_format):
+def show_output_preview(file_path, output_format, only_kepri=False):
     """Show preview of the output file"""
     try:
         if output_format == "csv":
             df = pd.read_csv(file_path)
         else:
             df = pd.read_excel(file_path)
+            
+        if only_kepri and "content" in df.columns:
+            df = df[
+                df["content"].str.contains("kepri ", case=False, na=False) |
+                df["content"].str.contains("kepulauan riau", case=False, na=False) |
+                df["content"].str.contains("batam", case=False, na=False) |
+                df["content"].str.contains("tanjungpinang", case=False, na=False) |
+                df["content"].str.contains("bintan", case=False, na=False) |
+                df["content"].str.contains("lingga", case=False, na=False) |
+                df["content"].str.contains("karimun", case=False, na=False) |
+                df["content"].str.contains("anambas", case=False, na=False) |
+                df["content"].str.contains("natuna", case=False, na=False)
+            ]
         
         st.write("### 📊 File Information")
         col1, col2, col3 = st.columns(3)
@@ -100,16 +114,35 @@ def show_output_preview(file_path, output_format):
         st.write("### 🔍 Preview Hasil")
         st.dataframe(df.set_index(pd.Index(range(1, len(df)+1))))
         
-        # Download button
-        with open(file_path, "rb") as f:
-            mime_type = "text/csv" if output_format == "csv" else "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            st.download_button(
-                label=f"📥 Download hasil ({output_format.upper()})",
-                data=f,
-                file_name=file_path.name,
-                mime=mime_type
-            )
+        # --- Tentukan nama file download ---
+        if only_kepri:
+            if output_format == "csv":
+                download_name = file_path.name.replace(".csv", "_onlykepri.csv")
+            else:
+                download_name = file_path.name.replace(".xlsx", "_onlykepri.xlsx")
+        else:
+            download_name = file_path.name
         
+        # --- Download sesuai preview ---
+        if output_format == "csv":
+            buffer = df.to_csv(index=False).encode("utf-8")
+            st.download_button(
+                label="📥 Download hasil (CSV)",
+                data=buffer,
+                file_name=download_name,   # sama nama aslinya
+                mime="text/csv"
+            )
+        else:
+            buffer = BytesIO()
+            df.to_excel(buffer, index=False)
+            buffer.seek(0)
+            st.download_button(
+                label="📥 Download hasil (XLSX)",
+                data=buffer,
+                file_name=download_name,   # sama nama aslinya
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            )
+
         return df
         
     except Exception as e:
@@ -158,6 +191,7 @@ with st.form("scraper_form"):
     with col1:
         keywords = st.text_input("Keywords (comma-separated)", "Harga Cabe, prabowo, BPS")
         start_date = st.date_input("Start Date", date.today())
+        only_kepri = st.checkbox("Fokuskan hanya berita kepri?")
         
     with col2:
         scrapers = st.multiselect("Pilih Scrapers", available_scrapers, default=["all"])
@@ -201,7 +235,7 @@ if submitted:
             if output_file and output_file.exists():
                 st.write("---")
                 st.write(f"### 📈 Results from: `{output_file.name}`")
-                show_output_preview(output_file, output_format)
+                show_output_preview(output_file, output_format, only_kepri=only_kepri)
             else:
                 st.warning("⚠️ Output file not found. Check if scraping was successful.")
                 
@@ -216,7 +250,7 @@ if submitted:
             if output_file and output_file.exists():
                 st.write("---")
                 st.write("### 📈 Partial Results (if any)")
-                show_output_preview(output_file, output_format)
+                show_output_preview(output_file, output_format, only_kepri=only_kepri)
 
 # Footer
 st.write("---")
