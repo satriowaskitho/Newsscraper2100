@@ -4,12 +4,24 @@ from datetime import date
 import sys
 import pandas as pd
 import os
-import glob
 import time
 from pathlib import Path
-from io import BytesIO
+from io import BytesIO, StringIO
 
 st.set_page_config(page_title="FENALTI: Fenomena Multi-Fungsi", page_icon="📰", layout="wide", initial_sidebar_state="auto")
+
+#background image
+#st.markdown("""
+#<style>
+#[data-testid="stAppViewContainer"] {
+#    background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e');
+#    background-size: cover;
+#    background-position: center;
+#    background-attachment: fixed;
+#}
+#</style>
+#""", unsafe_allow_html=True)
+
 
 # Header Section
 st.markdown("""
@@ -44,8 +56,28 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# st.title("📰 Web Scraper Berita 2100")
-# st.write("Isi form berikut untuk menjalankan scraper berita.")
+# Deskripsi dengan tampilan lebar dan jarak bawah
+st.markdown("""
+<div style="
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 1rem 2rem;
+    margin-top: 0.5rem;
+    margin-bottom: 1.5rem;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+">
+    <p style="font-size:1.2rem; color:#444; margin:0;">
+        Aplikasi ini digunakan untuk <b>mengambil dan mengelola data berita secara otomatis</b> 
+        dari berbagai situs web menggunakan daftar scraper yang telah disediakan. <br>
+        Kamu dapat menentukan <b>kata kunci</b>, <b>tanggal mulai</b>, dan <b>sumber berita</b> 
+        untuk pencarian yang lebih spesifik dan efisien.
+    </p>
+</div>
+""", unsafe_allow_html=True)
+
 
 # Available scrapers
 available_scrapers = [
@@ -54,81 +86,53 @@ available_scrapers = [
     "kontan", "mediaindonesia", "metrotvnews", "okezone", "tempo", "viva"
 ]
 
-def find_latest_output_file(output_format, keywords=None):
-    """Find the most recent output file in the output directory"""
-    output_dir = Path("output")
-    if not output_dir.exists():
-        return None
-    
-    if keywords:
-        # Create search pattern based on keywords
-        keywords_list = keywords.split(",")
-        keywords_short = ".".join(keywords_list[:2]) + ("..." if len(keywords_list) > 2 else "")
-        pattern = f"news-watch-{keywords_short}-*.{output_format}"
-    else:
-        pattern = f"news-watch-*.{output_format}"
-    
-    files = list(output_dir.glob(pattern))
-    if not files:
-        # Fallback: look for any files with the format
-        files = list(output_dir.glob(f"*.{output_format}"))
-    
-    if files:
-        # Return the most recent file
-        return max(files, key=os.path.getctime)
-    return None
-
-def show_output_preview(file_path, output_format, only_kepri=False):
-    """Show preview of the output file"""
+def show_dataframe_preview(df, output_format, only_kepri=False, duration=None, keywords="", scrapers="", start_date=""):
+    """Show preview of the dataframe"""
     try:
-        if output_format == "csv":
-            df = pd.read_csv(file_path)
-        else:
-            df = pd.read_excel(file_path)
-            
         if only_kepri and "content" in df.columns:
             df = df[
                 df["content"].str.contains("kepri ", case=False, na=False) |
                 df["content"].str.contains("kepulauan riau", case=False, na=False) |
                 df["content"].str.contains("batam", case=False, na=False) |
                 df["content"].str.contains("tanjungpinang", case=False, na=False) |
-                df["content"].str.contains("bintan", case=False, na=False) |
+                df["content"].str.contains("tanjung pinang", case=False, na=False) |
+                df["content"].str.contains("bintan ", case=False, na=False) |
                 df["content"].str.contains("lingga", case=False, na=False) |
                 df["content"].str.contains("karimun", case=False, na=False) |
                 df["content"].str.contains("anambas", case=False, na=False) |
                 df["content"].str.contains("natuna", case=False, na=False)
             ]
         
-        st.write("### 📊 File Information")
+        st.write("### 📊 Scraping Information")
         col1, col2, col3 = st.columns(3)
         with col1:
             st.metric("Total Rows", len(df))
         with col2:
-            file_size_mb = os.path.getsize(file_path) / (1024 * 1024)
-            st.metric("File Size", f"{file_size_mb:.2f} MB")
-        with col3:
             if duration is not None:
                 st.metric("Scraping Time", f"{duration:.2f} s")
+        with col3:
+            st.metric("Scrapers", scrapers if scrapers else "all")
         
         st.write("### 🔍 Preview Hasil")
         st.dataframe(df.set_index(pd.Index(range(1, len(df)+1))))
         
-        # --- Tentukan nama file download ---
-        if only_kepri:
-            if output_format == "csv":
-                download_name = file_path.name.replace(".csv", "_onlykepri.csv")
-            else:
-                download_name = file_path.name.replace(".xlsx", "_onlykepri.xlsx")
-        else:
-            download_name = file_path.name
+        # Generate download filename
+        timestamp = pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')
+        keywords_short = keywords.replace(",", "_")[:30] if keywords else "news"
+        scrapers_short = scrapers.replace(",", "_")[:20] if scrapers else "all"
         
-        # --- Download sesuai preview ---
+        if only_kepri:
+            download_name = f"{keywords_short}_{scrapers_short}_kepri_{timestamp}.{output_format}"
+        else:
+            download_name = f"{keywords_short}_{scrapers_short}_{timestamp}.{output_format}"
+        
+        # Download button
         if output_format == "csv":
             buffer = df.to_csv(index=False).encode("utf-8")
             st.download_button(
                 label="📥 Download hasil (CSV)",
                 data=buffer,
-                file_name=download_name,   # sama nama aslinya
+                file_name=download_name,
                 mime="text/csv"
             )
         else:
@@ -138,57 +142,24 @@ def show_output_preview(file_path, output_format, only_kepri=False):
             st.download_button(
                 label="📥 Download hasil (XLSX)",
                 data=buffer,
-                file_name=download_name,   # sama nama aslinya
+                file_name=download_name,
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             )
 
         return df
         
     except Exception as e:
-        st.error(f"❌ Error membaca file: {e}")
+        st.error(f"❌ Error memproses data: {e}")
         return None
-
-# Show existing output files at the top
-
-st.write("---")
-st.write("### 📁 Recent Output Files")
-
-output_dir = Path("output")
-if output_dir.exists():
-    csv_files = list(output_dir.glob("*.csv"))
-    xlsx_files = list(output_dir.glob("*.xlsx"))
-    
-    if csv_files or xlsx_files:
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            if csv_files:
-                st.write("**CSV Files:**")
-                for file in sorted(csv_files, key=os.path.getctime, reverse=True)[:3]:
-                    file_time = pd.Timestamp(os.path.getctime(file), unit='s').strftime('%Y-%m-%d %H:%M')
-                    st.write(f"• {file.name} ({file_time})")
-            
-        with col2:
-            if xlsx_files:
-                st.write("**XLSX Files:**")
-                for file in sorted(xlsx_files, key=os.path.getctime, reverse=True)[:3]:
-                    file_time = pd.Timestamp(os.path.getctime(file), unit='s').strftime('%Y-%m-%d %H:%M')
-                    st.write(f"• {file.name} ({file_time})")
-    else:
-        st.info("Belum ada file output. Jalankan scraper untuk membuat file baru.")
-else:
-    st.info("Folder output belum ada. Akan dibuat saat menjalankan scraper.")
-
-st.write("---")
 
 # Main form
 with st.form("scraper_form"):
-    st.write("### ⚙️ Scraper Configuration")
+    st.write("### ⚙️ Konfigurasi Ekstraksi Berita")
     
     col1, col2 = st.columns(2)
     
     with col1:
-        keywords = st.text_input("Keywords (comma-separated)", "Harga Cabe, prabowo, BPS")
+        keywords = st.text_input("Keywords (comma-separated)", "Harga Cabai, prabowo, BPS")
         start_date = st.date_input("Start Date", date.today())
         only_kepri = st.checkbox("Fokuskan hanya berita kepri?")
         
@@ -200,6 +171,23 @@ with st.form("scraper_form"):
 
 # Handle form submission
 if submitted:
+    # Validasi input wajib
+    if not keywords.strip():
+        st.warning("⚠️ Harap isi minimal satu **keyword** sebelum menjalankan ekstraksi.")
+        st.stop()
+
+    if not scrapers or scrapers == ["all"] and len(available_scrapers) > 1:
+        st.warning("⚠️ Harap pilih minimal satu **scraper** sebelum menjalankan ekstraksi.")
+        st.stop()
+
+    if not start_date:
+        st.warning("⚠️ Harap pilih **tanggal mulai (Start Date)** sebelum menjalankan ekstraksi.")
+        st.stop()
+    
+    # Use a temporary output directory
+    temp_output = Path("temp_output")
+    temp_output.mkdir(exist_ok=True)
+    
     cmd = [sys.executable, "-m", "newswatch.cli"]
 
     if keywords:
@@ -216,40 +204,71 @@ if submitted:
     st.code(" ".join(cmd), language="bash")
 
     # Progress indicator
-    with st.spinner("🔄 Menjalankan scraper..."):
+    with st.spinner("🔄 Menjalankan ekstraksi..."):
         try:
             start_time = time.time()
+            
+            # Get list of files before scraping
+            output_dir = Path("output")
+            if output_dir.exists():
+                before_files = set(output_dir.glob(f"*.{output_format}"))
+            else:
+                before_files = set()
+            
             result = subprocess.run(cmd, capture_output=True, text=True, check=True, timeout=600)
             duration = time.time() - start_time
-            st.success("✅ Scraping selesai!")
+            st.success("✅ Ekstraksi selesai!")
             
             # Show command output
             if result.stdout:
                 with st.expander("📄 Command Output", expanded=False):
                     st.code(result.stdout)
             
-            # Find and display the output file
-            output_file = find_latest_output_file(output_format, keywords)
-            
-            if output_file and output_file.exists():
-                st.write("---")
-                st.write(f"### 📈 Results from: `{output_file.name}`")
-                show_output_preview(output_file, output_format, only_kepri=only_kepri)
+            # Find the newly created file
+            if output_dir.exists():
+                after_files = set(output_dir.glob(f"*.{output_format}"))
+                new_files = after_files - before_files
+                
+                if new_files:
+                    # Get the most recent new file
+                    latest_file = max(new_files, key=os.path.getctime)
+                    
+                    # Read the file
+                    if output_format == "csv":
+                        df = pd.read_csv(latest_file)
+                    else:
+                        df = pd.read_excel(latest_file)
+                    
+                    # Display results
+                    st.write("---")
+                    st.write(f"### 📈 Hasil Scraping")
+                    show_dataframe_preview(
+                        df, 
+                        output_format, 
+                        only_kepri=only_kepri, 
+                        duration=duration,
+                        keywords=keywords,
+                        scrapers=",".join(scrapers),
+                        start_date=str(start_date)
+                    )
+                    
+                    # Delete the file after reading
+                    try:
+                        latest_file.unlink()
+                    except:
+                        pass
+                else:
+                    st.warning("⚠️ Tidak ada data ditemukan dari ekstraksi ini.")
             else:
-                st.warning("⚠️ Output file not found. Check if scraping was successful.")
+                st.warning("⚠️ Output folder tidak ditemukan.")
                 
         except subprocess.TimeoutExpired:
-            st.error("❌ Scraper timed out after 10 minutes")
+            st.error("❌ Ekstraksi timed out setelah 10 menit")
         except subprocess.CalledProcessError as e:
-            st.error("❌ Error saat menjalankan scraper")
+            st.error("❌ Error saat menjalankan ekstraksi")
             st.code(e.stderr)
-            
-            # Still try to show any partial results
-            output_file = find_latest_output_file(output_format, keywords)
-            if output_file and output_file.exists():
-                st.write("---")
-                st.write("### 📈 Partial Results (if any)")
-                show_output_preview(output_file, output_format, only_kepri=only_kepri)
+        except Exception as e:
+            st.error(f"❌ Error: {e}")
 
 # Footer
 st.write("---")
@@ -265,3 +284,25 @@ st.write("""
 7. `source` - News source website
 8. `link` - Original article URL
 """)
+
+# Copyright footer
+st.markdown("""
+<style>
+.footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #f9f9f9;
+    color: gray;
+    text-align: center;
+    padding: 6px 0;
+    font-size: 0.9rem;
+    border-top: 1px solid #ddd;
+}
+</style>
+
+<div class="footer">
+    © 2025 <b>Tim IT BPS Provinsi Kepulauan Riau</b>. All rights reserved.
+</div>
+""", unsafe_allow_html=True)
