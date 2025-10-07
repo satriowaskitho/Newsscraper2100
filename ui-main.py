@@ -70,8 +70,8 @@ st.markdown("""
     box-shadow: 0 2px 6px rgba(0,0,0,0.04);
 ">
     <p style="font-size:1.2rem; color:#444; margin:0;">
-        Aplikasi ini digunakan untuk <b>mengambil dan mengelola data berita secara otomatis</b> 
-        dari berbagai situs web menggunakan daftar scraper yang telah disediakan. <br>
+        Aplikasi ini digunakan sebagai mesin ekstraksi data berita secara otomatis</b> 
+        dari berbagai situs berita yang telah disediakan. <br>
         Kamu dapat menentukan <b>kata kunci</b>, <b>tanggal mulai</b>, dan <b>sumber berita</b> 
         untuk pencarian yang lebih spesifik dan efisien.
     </p>
