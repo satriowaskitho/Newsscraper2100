@@ -176,7 +176,7 @@ if submitted:
         st.warning("⚠️ Harap isi minimal satu **keyword** sebelum menjalankan ekstraksi.")
         st.stop()
 
-    if not scrapers or scrapers == ["all"] and len(available_scrapers) > 1:
+    if not scrapers and len(available_scrapers) > 1:
         st.warning("⚠️ Harap pilih minimal satu **scraper** sebelum menjalankan ekstraksi.")
         st.stop()
 
