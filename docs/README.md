@@ -69,6 +69,7 @@ Media lokal: Batamnews, Tribun Batam, dll.
 Dengan filter berita yang relevan terhadap wilayah Kepulauan Riau
 
 ## 📁 Struktur Folder
+
 newsscraper2100/
 ├── app.py                  # Streamlit app utama
 ├── scraper/                # Modul scraper
@@ -85,5 +86,5 @@ newsscraper2100/
 
 ## 📫 Kontak
 
-✉️ Email: muhammad.rizki@email.com
-🌐 LinkedIn: linkedin.com/in/namakamu
+✉️ Email: muhammadrizky15.mr@gmail.com
+🌐 LinkedIn: -
