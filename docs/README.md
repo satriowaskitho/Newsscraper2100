@@ -70,13 +70,13 @@ Dengan filter berita yang relevan terhadap wilayah Kepulauan Riau
 
 ## 📁 Struktur Folder
 newsscraper2100/
-├── app.py                # Streamlit app utama
-├── scraper/              # Modul scraper
-│   └── kpi_scraper.py    # Scraper untuk berita Kepri
-├── assets/               # Gambar UI, wordcloud, dll
-├── data/                 # Data hasil scraping
-├── requirements.txt
-└── README.md
+├── app.py                  # Streamlit app utama
+├── scraper/                # Modul scraper
+│   └── kpi_scraper.py      # Scraper untuk berita Kepri
+├── assets/                 # Gambar UI, wordcloud, ikon, dll
+├── data/                   # Data hasil scraping (CSV, JSON, dsb.)
+├── requirements.txt        # Daftar dependensi Python
+└── README.md               # Dokumentasi proyek
 
 ## 🙏 Kredit
 
