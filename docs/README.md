@@ -44,7 +44,9 @@
 ```bash
 git clone https://github.com/username/newsscraper2100.git
 cd newsscraper2100
-(Opsional) Buat virtual environment:
+```
+
+2. **(Opsional) Buat virtual environment:**
 
 python -m venv env
 source env/bin/activate  # Windows: .\env\Scripts\activate
