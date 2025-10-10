@@ -40,13 +40,50 @@
 ## 📦 Instalasi
 
 1. **Clone repositori ini:**
-
 ```bash
 git clone https://github.com/username/newsscraper2100.git
 cd newsscraper2100
 ```
 
 2. **(Opsional) Buat virtual environment:**
-
+```bash
 python -m venv env
-source env/bin/activate  # Windows: .\env\Scripts\activate
+.\env\Scripts\activate
+```
+
+3. **Install dependensi:**
+```bash
+pip install -r requirements.txt
+```
+
+4. **Jalankan aplikasi:**
+```bash
+streamlit run app.py
+```
+
+## 🗺️ Target Sumber & Wilayah
+
+Proyek ini secara khusus menargetkan scraping berita dari:
+Media nasional: Antaranews, Kompas, Detik, dll.
+Media lokal: Batamnews, Tribun Batam, dll.
+Dengan filter berita yang relevan terhadap wilayah Kepulauan Riau
+
+## 📁 Struktur Folder
+newsscraper2100/
+├── app.py                # Streamlit app utama
+├── scraper/              # Modul scraper
+│   └── kpi_scraper.py    # Scraper untuk berita Kepri
+├── assets/               # Gambar UI, wordcloud, dll
+├── data/                 # Data hasil scraping
+├── requirements.txt
+└── README.md
+
+## 🙏 Kredit
+
+🔗 Original project: okkymabruri/news-watch
+🚀 Dikembangkan oleh: Muhammad Rizki
+
+## 📫 Kontak
+
+✉️ Email: muhammad.rizki@email.com
+🌐 LinkedIn: linkedin.com/in/namakamu
