@@ -15,6 +15,3 @@ vaderSentiment==3.3.2
 
 # Web Framework
 streamlit==1.49.1
-
-transformers==4.37.4
-torch==2.2.0
