@@ -8,7 +8,7 @@ import time
 from pathlib import Path
 from io import BytesIO, StringIO
 
-st.set_page_config(page_title="FENALTI: Fenomena Multi-Fungsi", page_icon="📰", layout="wide", initial_sidebar_state="auto")
+st.set_page_config(page_title="FAKTA: Fenomena Aktual Terkini", page_icon="📰", layout="wide", initial_sidebar_state="auto")
 
 #background image
 #st.markdown("""
@@ -52,7 +52,7 @@ st.markdown("""
 
 st.markdown("""
 <div class="main-header">
-    <div class="header-title">📰 FENALTI: Fenomena Multi-Fungsi</div>
+    <div class="header-title">📰 FAKTA: Fenomena Aktual Terkini</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -81,9 +81,9 @@ st.markdown("""
 
 # Available scrapers
 available_scrapers = [
-    "all", "antaranews", "bisnis", "bloombergtechnoz", 
-    "cnbcindonesia", "detik", "jawapos", "katadata", "kepriantaranews", "kompas", 
-    "kontan", "mediaindonesia", "metrotvnews", "okezone", "tempo", "viva"
+    "all", "antaranews", "alurnews", "batampos", "bisnis", "bloombergtechnoz", 
+    "cnbcindonesia", "detik", "hariankepri", "jawapos", "katadata", "kepriantaranews", "keprinews", "kompas", 
+    "kontan", "mediaindonesia", "metrotvnews", "okezone", "tempo", "ulasan", "viva"
 ]
 
 def show_dataframe_preview(df, output_format, only_kepri=False, duration=None, keywords="", scrapers="", start_date=""):
@@ -167,7 +167,7 @@ with st.form("scraper_form"):
         scrapers = st.multiselect("Pilih Scrapers", available_scrapers, default=["all"])
         output_format = st.selectbox("Output Format", ["csv", "xlsx"])
 
-    submitted = st.form_submit_button("🚀 Run Scraper", type="primary")
+    submitted = st.form_submit_button("🚀 Run Ekstraksi", type="primary")
 
 # Handle form submission
 if submitted:
@@ -274,6 +274,8 @@ if submitted:
 st.write("---")
 st.write("### ℹ️ Information")
 st.write("""
+**Note: Hasil ekstraksi hanya dimunculkan sekali, silahkan unduh hasilnya untuk penyimpanan permanen.**
+         
 **Expected output columns:**
 1. `title` - Article title
 2. `publish_date` - Publication date

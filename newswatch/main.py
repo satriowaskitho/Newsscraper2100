@@ -1,9 +1,3 @@
-"""
-Improved error handling for the news scraper application
-author: Okky Mabruri <okkymbrur@gmail.com>
-maintainer: Okky Mabruri <okkymbrur@gmail.com>
-"""
-
 import asyncio
 import csv
 import logging
@@ -15,7 +9,6 @@ import signal
 import sys
 
 from .scrapers.antaranews import AntaranewsScraper
-# from .scrapers.batampos import BatamposScraper
 from .scrapers.bisnis import BisnisScraper
 from .scrapers.bloombergtechnoz import BloombergTechnozScraper
 from .scrapers.cnbcindonesia import CNBCScraper
@@ -30,6 +23,12 @@ from .scrapers.metrotvnews import MetrotvnewsScraper
 from .scrapers.okezone import OkezoneScraper
 from .scrapers.tempo import TempoScraper
 from .scrapers.viva import VivaScraper
+
+from .scrapers.batampos import BatamposScraper
+from .scrapers.keprinews import KeprinewsScraper
+from .scrapers.ulasan import UlasanScraper
+from .scrapers.alurnews import AlurnewsScraper
+from .scrapers.hariankepri import HarianKepriScraper
 
 # Enhanced logging configuration
 logging.basicConfig(
@@ -223,18 +222,25 @@ def get_available_scrapers():
     """Get list of available scrapers based on platform"""
     scraper_classes = {
         "antaranews": {"class": AntaranewsScraper, "params": {"concurrency": 7}},
-        # "batampos": {"class": BatamposScraper, "params": {"concurrency": 8}},
+        "alurnews": {"class": AlurnewsScraper, "params": {"concurrency": 8}},
+        "batampos": {"class": BatamposScraper, "params": {"concurrency": 8}},
         "bisnis": {"class": BisnisScraper, "params": {"concurrency": 5}},
         "bloombergtechnoz": {"class": BloombergTechnozScraper, "params": {}},
         "cnbcindonesia": {"class": CNBCScraper, "params": {"concurrency": 5}},
         "detik": {"class": DetikScraper, "params": {"concurrency": 5}},
+        "hariankepri": {"class": HarianKepriScraper, "params": {"concurrency": 8}},
         "kompas": {"class": KompasScraper, "params": {"concurrency": 7}},
         "kepriantaranews": {"class": KepriAntaranewsScraper, "params": {"concurrency": 7}},
+        "keprinews": {"class": KeprinewsScraper, "params": {"concurrency": 8}},
         "metrotvnews": {"class": MetrotvnewsScraper, "params": {"concurrency": 2}},
         "okezone": {"class": OkezoneScraper, "params": {"concurrency": 7}},
         "tempo": {"class": TempoScraper, "params": {"concurrency": 1}},
+        "ulasan": {"class": UlasanScraper, "params": {"concurrency": 8}},
         "viva": {"class": VivaScraper, "params": {"concurrency": 7}},
         "mediaindonesia": {"class": MediaIndonesiaScraper, "params": {}},
+        # "jawapos": {"class": JawaposScraper, "params": {"concurrency": 5}},
+        # "katadata": {"class": KatadataScraper, "params": {}},
+        # "kontan": {"class": KontanScraper, "params": {}},
     }
 
     linux_excluded_scrapers = {
